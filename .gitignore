@@ -11,3 +11,4 @@
 patches.map
 build/
 .vscode/settings.json
+/.vs

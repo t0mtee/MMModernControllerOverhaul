@@ -5,13 +5,13 @@
 
 # Unique ID of this mod. Pick something long enough that it'll never be the same as any other mod.
 # The name displayed in the mod management menu is separate from this so this doesn't need to be human readable.
-id = "mm_recomp_mod_template"
+id = "mm_recomp_modern_hud_layout"
 
 # Version of this mod.
 version = "1.0.0"
 
 # Authors of this mod.
-authors = [ "Your name here" ]
+authors = [ "tomtee" ]
 
 # ID of the target recomp game.
 game_id = "mm"
