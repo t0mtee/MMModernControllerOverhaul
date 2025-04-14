@@ -2,6 +2,20 @@
 #include "global.h"
 #include "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope.h"
 
+RECOMP_IMPORT("*", u32 recomp_get_config_u32(const char* key));
+
+#define INCBIN(identifier, filename)          \
+    asm(".pushsection .rodata\n"              \
+        "\t.local " #identifier "\n"          \
+        "\t.type " #identifier ", @object\n"  \
+        "\t.balign 8\n"                       \
+        #identifier ":\n"                     \
+        "\t.incbin \"" filename "\"\n\n"      \
+                                              \
+        "\t.balign 8\n"                       \
+        "\t.popsection\n");                   \
+    extern u8 identifier[]
+
 typedef enum {
     /* 0 */ PICTO_BOX_STATE_OFF,         // Not using the pictograph
     /* 1 */ PICTO_BOX_STATE_LENS,        // Looking through the lens of the pictograph
@@ -175,6 +189,8 @@ RECOMP_PATCH void Interface_DrawItemButtons(PlayState* play) {
 extern f32 D_801BF9CC[2];
 extern void Interface_SetPerspectiveView(PlayState* play, s32 topY, s32 bottomY, s32 leftX, s32 rightX);
 
+INCBIN(aButtonEmpty, "./textures/a_icon.ia8.bin");
+
 RECOMP_PATCH void Interface_DrawAButton(PlayState* play) {
     InterfaceContext* interfaceCtx = &play->interfaceCtx;
     s16 aAlpha;
@@ -206,7 +222,14 @@ RECOMP_PATCH void Interface_DrawAButton(PlayState* play) {
     gSPVertex(OVERLAY_DISP++, &interfaceCtx->actionVtx[4], 4, 0);
     gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 0, 0, 0, aAlpha);
 
-    OVERLAY_DISP = Gfx_DrawTexQuadIA8(OVERLAY_DISP, gButtonBackgroundTex, 32, 32, 0);
+    // @modern_layout Draw empty a button if no action present
+    if (interfaceCtx -> aButtonDoAction == DO_ACTION_NONE && recomp_get_config_u32("icon_replacement") == 1)
+    {
+        OVERLAY_DISP = Gfx_DrawTexQuadIA8(OVERLAY_DISP, aButtonEmpty, 32, 32, 0);
+    }
+    else{
+        OVERLAY_DISP = Gfx_DrawTexQuadIA8(OVERLAY_DISP, gButtonBackgroundTex, 32, 32, 0);
+    }
 
     // Draw A Button Colored
     gDPPipeSync(OVERLAY_DISP++);
@@ -245,14 +268,10 @@ RECOMP_PATCH void Interface_DrawAButton(PlayState* play) {
     CLOSE_DISPS(play->state.gfxCtx);
 }
 
-extern TexturePtr gAmmoDigit0Tex[];
 extern s16 D_801BFB04[4];
 extern s16 D_801BFB0C[4];
 
-RECOMP_PATCH void Interface_DrawAmmoCount(PlayState* play, s16 button, s16 alpha) {
-    u8 i;
-    u16 ammo;
-
+RECOMP_HOOK("Interface_DrawAmmoCount") void Interface_DrawAmmoCount_Init(PlayState* play, s16 button, s16 alpha) {
     // @modern_layout Move ammo UI if modern layout is enabled
     // Left distance
     D_801BFB04[0] = 213;    // EQUIP_SLOT_B
@@ -263,714 +282,74 @@ RECOMP_PATCH void Interface_DrawAmmoCount(PlayState* play, s16 button, s16 alpha
     D_801BFB0C[0] = 73;     // EQUIP_SLOT_B
     D_801BFB0C[1] = 52;     // EQUIP_SLOT_C_LEFT
     D_801BFB0C[2] = 32;     // EQUIP_SLOT_C_DOWN
-
-    OPEN_DISPS(play->state.gfxCtx);
-
-    i = ((void)0, GET_CUR_FORM_BTN_ITEM(button));
-
-    if ((i == ITEM_DEKU_STICK) || (i == ITEM_DEKU_NUT) || (i == ITEM_BOMB) || (i == ITEM_BOW) ||
-        ((i >= ITEM_BOW_FIRE) && (i <= ITEM_BOW_LIGHT)) || (i == ITEM_BOMBCHU) || (i == ITEM_POWDER_KEG) ||
-        (i == ITEM_MAGIC_BEANS) || (i == ITEM_PICTOGRAPH_BOX)) {
-
-        if ((i >= ITEM_BOW_FIRE) && (i <= ITEM_BOW_LIGHT)) {
-            i = ITEM_BOW;
-        }
-
-        ammo = AMMO(i);
-
-        if (i == ITEM_PICTOGRAPH_BOX) {
-            if (!CHECK_QUEST_ITEM(QUEST_PICTOGRAPH)) {
-                ammo = 0;
-            }
-            else {
-                ammo = 1;
-            }
-        }
-
-        gDPPipeSync(OVERLAY_DISP++);
-
-        if ((button == EQUIP_SLOT_B) && (gSaveContext.minigameStatus == MINIGAME_STATUS_ACTIVE)) {
-            ammo = play->interfaceCtx.minigameAmmo;
-        }
-        else if ((button == EQUIP_SLOT_B) && (play->unk_1887C > 1)) {
-            ammo = play->unk_1887C - 1;
-        }
-        else if (((i == ITEM_BOW) && (AMMO(i) == CUR_CAPACITY(UPG_QUIVER))) ||
-            ((i == ITEM_BOMB) && (AMMO(i) == CUR_CAPACITY(UPG_BOMB_BAG))) ||
-            ((i == ITEM_DEKU_STICK) && (AMMO(i) == CUR_CAPACITY(UPG_DEKU_STICKS))) ||
-            ((i == ITEM_DEKU_NUT) && (AMMO(i) == CUR_CAPACITY(UPG_DEKU_NUTS))) ||
-            ((i == ITEM_BOMBCHU) && (AMMO(i) == CUR_CAPACITY(UPG_BOMB_BAG))) ||
-            ((i == ITEM_POWDER_KEG) && (ammo == 1)) || ((i == ITEM_PICTOGRAPH_BOX) && (ammo == 1)) ||
-            ((i == ITEM_MAGIC_BEANS) && (ammo == 20))) {
-            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 120, 255, 0, alpha);
-        }
-
-        if ((u32)ammo == 0) {
-            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 100, 100, 100, alpha);
-        }
-
-        for (i = 0; ammo >= 10; i++) {
-            ammo -= 10;
-        }
-
-        // Draw upper digit (tens)
-        if ((u32)i != 0) {
-            OVERLAY_DISP = Gfx_DrawTexRectIA8(OVERLAY_DISP, ((u8*)gAmmoDigit0Tex + ((8 * 8) * i)), 8, 8,
-                D_801BFB04[button], D_801BFB0C[button], 8, 8, 1 << 10, 1 << 10);
-        }
-
-        // Draw lower digit (ones)
-        OVERLAY_DISP = Gfx_DrawTexRectIA8(OVERLAY_DISP, ((u8*)gAmmoDigit0Tex + ((8 * 8) * ammo)), 8, 8,
-            D_801BFB04[button] + 6, D_801BFB0C[button], 8, 8, 1 << 10, 1 << 10);
-    }
-
-    CLOSE_DISPS(play->state.gfxCtx);
 }
 
-extern s16 D_801BF9B0;
-extern f32 D_801BF9B4[2];
 extern s16 D_801BF9C4[2];
 extern s16 D_801BF9C8[2];
-extern void Interface_DrawItemIconTexture(PlayState* play, TexturePtr texture, s16 button);
 
-RECOMP_PATCH void Interface_DrawBButtonIcons(PlayState* play) {
+INCBIN(bButtonEmpty, "./textures/b_empty_icon.ia8.bin");
+bool bButtonEmptyDrawn = false;
+
+RECOMP_HOOK("Interface_DrawBButtonIcons") void Interface_DrawBButtonIcons(PlayState* play) {
+    bButtonEmptyDrawn = false;
+
+    D_801BF9C4[0] = 209;
+    D_801BF9C4[1] = 206;
+
+    D_801BF9C8[0] = 61;
+    D_801BF9C8[1] = 60;
+
     InterfaceContext* interfaceCtx = &play->interfaceCtx;
-    Player* player = GET_PLAYER(play);
 
     OPEN_DISPS(play->state.gfxCtx);
 
-    gDPPipeSync(OVERLAY_DISP++);
-    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->bAlpha);
-    gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
-
-    if ((interfaceCtx->unk_222 == 0) && (player->stateFlags3 & PLAYER_STATE3_1000000)) {
-        if (gSaveContext.buttonStatus[EQUIP_SLOT_B] != BTN_DISABLED) {
-            Interface_DrawItemIconTexture(play, interfaceCtx->iconItemSegment, EQUIP_SLOT_B);
-            gDPPipeSync(OVERLAY_DISP++);
-            gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
-                PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
-
-            Interface_DrawAmmoCount(play, EQUIP_SLOT_B, interfaceCtx->bAlpha);
-        }
-    }
-    else if ((!interfaceCtx->unk_21C && (interfaceCtx->unk_222 == 0)) ||
-        ((interfaceCtx->unk_21C &&
-            ((BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B) < ITEM_SWORD_KOKIRI) ||
-                (BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B) > ITEM_SWORD_GILDED)) &&
-            BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B) != ITEM_NONE) &&
-            (BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B) != ITEM_DEKU_NUT))) {
-        if ((player->transformation == PLAYER_FORM_FIERCE_DEITY) || (player->transformation == PLAYER_FORM_HUMAN)) {
-            if (BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B) != ITEM_NONE) {
-                Interface_DrawItemIconTexture(play, interfaceCtx->iconItemSegment, EQUIP_SLOT_B);
-                if ((player->stateFlags1 & PLAYER_STATE1_800000) || CHECK_WEEKEVENTREG(WEEKEVENTREG_08_01) ||
-                    (play->unk_1887C >= 2)) {
-                    gDPPipeSync(OVERLAY_DISP++);
-                    gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE,
-                        0, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
-
-                    if ((play->sceneId != SCENE_SYATEKI_MIZU) && (play->sceneId != SCENE_SYATEKI_MORI) &&
-                        (play->sceneId != SCENE_BOWLING) &&
-                        ((gSaveContext.minigameStatus != MINIGAME_STATUS_ACTIVE) ||
-                            (gSaveContext.save.entrance != ENTRANCE(ROMANI_RANCH, 0))) &&
-                        ((gSaveContext.minigameStatus != MINIGAME_STATUS_ACTIVE) || !CHECK_EVENTINF(EVENTINF_35)) &&
-                        (!CHECK_WEEKEVENTREG(WEEKEVENTREG_31_80) || (play->unk_1887C != 100))) {
-                        Interface_DrawAmmoCount(play, EQUIP_SLOT_B, interfaceCtx->bAlpha);
-                    }
-                }
-            }
-        }
-    }
-    else if (interfaceCtx->unk_222 != 0) {
+    if (recomp_get_config_u32("icon_replacement") == 1 &&
+        (BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B) == ITEM_NONE || interfaceCtx->bButtonDoAction == DO_ACTION_NONE) &&
+        (&play->pauseCtx)->state == PAUSE_STATE_OFF) {
+        bButtonEmptyDrawn = true;
         gDPPipeSync(OVERLAY_DISP++);
-        gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
-            PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
-        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->bAlpha);
-        gDPLoadTextureBlock_4b(OVERLAY_DISP++, interfaceCtx->doActionSegment + 0x480, G_IM_FMT_IA, 48, 16, 0,
-            G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
-            G_TX_NOLOD, G_TX_NOLOD);
-
-        D_801BF9B0 = 1024.0f / (D_801BF9B4[gSaveContext.options.language] / 100.0f);
-
-        // @modern_layout Move resume label
-        gSPTextureRectangle(
-            OVERLAY_DISP++, (D_801BF9C4[gSaveContext.options.language] + 51) * 4,
-            (D_801BF9C8[gSaveContext.options.language] + 38) * 4, ((D_801BF9C4[gSaveContext.options.language] + 0x30 + 51) << 2),
-            ((D_801BF9C8[gSaveContext.options.language] + 38 + 0x10) << 2), G_TX_RENDERTILE, 0, 0, D_801BF9B0, D_801BF9B0);
-    }
-    else if (interfaceCtx->bButtonDoAction != DO_ACTION_NONE) {
-        gDPPipeSync(OVERLAY_DISP++);
-        gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
-            PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
-        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->bAlpha);
-        gDPLoadTextureBlock_4b(OVERLAY_DISP++, interfaceCtx->doActionSegment + 0x600, G_IM_FMT_IA, 48, 16, 0,
-            G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
-            G_TX_NOLOD, G_TX_NOLOD);
-
-        D_801BF9B0 = 1024.0f / (D_801BF9B4[gSaveContext.options.language] / 100.0f);
-
-        // @modern_layout Move action labels
-        gSPTextureRectangle(
-            OVERLAY_DISP++, (D_801BF9C4[gSaveContext.options.language] + 51) * 4,
-            (D_801BF9C8[gSaveContext.options.language] + 38) * 4, ((D_801BF9C4[gSaveContext.options.language] + 0x30 + 51) << 2),
-            ((D_801BF9C8[gSaveContext.options.language] + 0x10 + 38) << 2), G_TX_RENDERTILE, 0, 0, D_801BF9B0, D_801BF9B0);
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 100, 255, 120, interfaceCtx->bAlpha);
+        OVERLAY_DISP = Gfx_DrawTexRectIA8(OVERLAY_DISP, bButtonEmpty,
+            0x20, 0x20, 218, 55, 0x1D,
+            0x1D, ((s32)(1.1230469f * (1 << 10)) >> 1) * 2, ((s32)(1.1230469f * (1 << 10)) >> 1) * 2);
     }
 
     CLOSE_DISPS(play->state.gfxCtx);
 }
 
+// @modern_layout Change equip animation destination
 extern s16 sCButtonPosX[3];
 extern s16 sCButtonPosY[3];
-extern s16 sEquipState;
-extern s16 sEquipMagicArrowSlotHoldTimer;
-extern s16 sEquipAnimTimer;
 
-RECOMP_PATCH void KaleidoScope_UpdateItemEquip(PlayState* play) {
-    // @modern_layout Change equip animation destination
+RECOMP_HOOK("KaleidoScope_UpdateItemEquip") void KaleidoScope_UpdateItemEquip_Init(PlayState* play) {
     sCButtonPosX[0] = 350;
     sCButtonPosY[0] = 950;
 
     sCButtonPosX[1] = 550;
     sCButtonPosY[1] = 1100;
-
-    static s16 sEquipMagicArrowBowSlotHoldTimer = 0;
-    PauseContext* pauseCtx = &play->pauseCtx;
-    Vtx* bowItemVtx;
-    u16 offsetX;
-    u16 offsetY;
-
-    // Grow glowing orb when equipping magic arrows
-    if (sEquipState == EQUIP_STATE_MAGIC_ARROW_GROW_ORB) {
-        pauseCtx->equipAnimAlpha += 14;
-        if (pauseCtx->equipAnimAlpha > 255) {
-            pauseCtx->equipAnimAlpha = 254;
-            sEquipState++;
-        }
-        // Hover over magic arrow slot when the next state is reached
-        sEquipMagicArrowSlotHoldTimer = 5;
-        return;
-    }
-
-    if (sEquipState == EQUIP_STATE_MAGIC_ARROW_HOVER_OVER_BOW_SLOT) {
-        sEquipMagicArrowBowSlotHoldTimer--;
-
-        if (sEquipMagicArrowBowSlotHoldTimer == 0) {
-            pauseCtx->equipTargetItem -= 0xB5 - ITEM_BOW_FIRE;
-            pauseCtx->equipTargetSlot = SLOT_BOW;
-            sEquipAnimTimer = 6;
-            pauseCtx->equipAnimScale = 320;
-            pauseCtx->equipAnimShrinkRate = 40;
-            sEquipState++;
-            Audio_PlaySfx(NA_SE_SY_SYNTH_MAGIC_ARROW);
-        }
-        return;
-    }
-
-    if (sEquipState == EQUIP_STATE_MAGIC_ARROW_MOVE_TO_BOW_SLOT) {
-        bowItemVtx = &pauseCtx->itemVtx[SLOT_BOW * 4];
-        offsetX = ABS_ALT(pauseCtx->equipAnimX - bowItemVtx->v.ob[0] * 10) / sEquipAnimTimer;
-        offsetY = ABS_ALT(pauseCtx->equipAnimY - bowItemVtx->v.ob[1] * 10) / sEquipAnimTimer;
-    }
-    else {
-        offsetX = ABS_ALT(pauseCtx->equipAnimX - sCButtonPosX[pauseCtx->equipTargetCBtn]) / sEquipAnimTimer;
-        offsetY = ABS_ALT(pauseCtx->equipAnimY - sCButtonPosY[pauseCtx->equipTargetCBtn]) / sEquipAnimTimer;
-    }
-
-    if ((pauseCtx->equipTargetItem >= 0xB5) && (pauseCtx->equipAnimAlpha < 254)) {
-        pauseCtx->equipAnimAlpha += 14;
-        if (pauseCtx->equipAnimAlpha > 255) {
-            pauseCtx->equipAnimAlpha = 254;
-        }
-        sEquipMagicArrowSlotHoldTimer = 5;
-        return;
-    }
-
-    if (sEquipMagicArrowSlotHoldTimer == 0) {
-        pauseCtx->equipAnimScale -= pauseCtx->equipAnimShrinkRate / sEquipAnimTimer;
-        pauseCtx->equipAnimShrinkRate -= pauseCtx->equipAnimShrinkRate / sEquipAnimTimer;
-
-        // Update coordinates of item icon while being equipped
-        if (sEquipState == EQUIP_STATE_MAGIC_ARROW_MOVE_TO_BOW_SLOT) {
-            // target is the bow slot
-            if (pauseCtx->equipAnimX >= (pauseCtx->itemVtx[SLOT_BOW * 4].v.ob[0] * 10)) {
-                pauseCtx->equipAnimX -= offsetX;
-            }
-            else {
-                pauseCtx->equipAnimX += offsetX;
-            }
-
-            if (pauseCtx->equipAnimY >= (pauseCtx->itemVtx[SLOT_BOW * 4].v.ob[1] * 10)) {
-                pauseCtx->equipAnimY -= offsetY;
-            }
-            else {
-                pauseCtx->equipAnimY += offsetY;
-            }
-        }
-        else {
-            // target is the c button
-            if (pauseCtx->equipAnimX >= sCButtonPosX[pauseCtx->equipTargetCBtn]) {
-                pauseCtx->equipAnimX -= offsetX;
-            }
-            else {
-                pauseCtx->equipAnimX += offsetX;
-            }
-
-            if (pauseCtx->equipAnimY >= sCButtonPosY[pauseCtx->equipTargetCBtn]) {
-                pauseCtx->equipAnimY -= offsetY;
-            }
-            else {
-                pauseCtx->equipAnimY += offsetY;
-            }
-        }
-
-        sEquipAnimTimer--;
-        if (sEquipAnimTimer == 0) {
-            if (sEquipState == EQUIP_STATE_MAGIC_ARROW_MOVE_TO_BOW_SLOT) {
-                sEquipState++;
-                sEquipMagicArrowBowSlotHoldTimer = 4;
-                return;
-            }
-
-            // Equip item onto c buttons
-            if (pauseCtx->equipTargetCBtn == PAUSE_EQUIP_C_LEFT) {
-                // Swap if item is already equipped on CDown or CRight.
-                if (pauseCtx->equipTargetSlot == C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) & 0xFF) != ITEM_NONE) {
-                        if ((pauseCtx->equipTargetItem >= 0xB5) && (pauseCtx->equipTargetItem < 0xB8) &&
-                            (((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) & 0xFF) == ITEM_BOW) ||
-                                (((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) & 0xFF) >= ITEM_BOW_FIRE) &&
-                                    ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) & 0xFF) <= ITEM_BOW_LIGHT)))) {
-                            pauseCtx->equipTargetItem -= 0xB5 - ITEM_BOW_FIRE;
-                            pauseCtx->equipTargetSlot = SLOT_BOW;
-                        }
-                        else {
-                            BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT);
-                            C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT);
-                            Interface_LoadItemIcon(play, EQUIP_SLOT_C_DOWN);
-                        }
-                    }
-                    else {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = ITEM_NONE;
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = SLOT_NONE;
-                    }
-                }
-                else if (pauseCtx->equipTargetSlot == C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) & 0xFF) != ITEM_NONE) {
-                        if ((pauseCtx->equipTargetItem >= 0xB5) && (pauseCtx->equipTargetItem < 0xB8) &&
-                            (((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) & 0xFF) == ITEM_BOW) ||
-                                (((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) & 0xFF) >= ITEM_BOW_FIRE) &&
-                                    ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) & 0xFF) <= ITEM_BOW_LIGHT)))) {
-                            pauseCtx->equipTargetItem -= 0xB5 - ITEM_BOW_FIRE;
-                            pauseCtx->equipTargetSlot = SLOT_BOW;
-                        }
-                        else {
-                            BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT);
-                            C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT);
-                            Interface_LoadItemIcon(play, EQUIP_SLOT_C_RIGHT);
-                        }
-                    }
-                    else {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) = ITEM_NONE;
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT) = SLOT_NONE;
-                    }
-                }
-
-                // Special case for magic arrows
-                if ((pauseCtx->equipTargetItem >= 0xB5) && (pauseCtx->equipTargetItem < 0xB8)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) == ITEM_BOW) ||
-                        ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) >= ITEM_BOW_FIRE) &&
-                            (BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) <= ITEM_BOW_LIGHT))) {
-                        pauseCtx->equipTargetItem -= 0xB5 - ITEM_BOW_FIRE;
-                        pauseCtx->equipTargetSlot = SLOT_BOW;
-                    }
-                }
-                else if (pauseCtx->equipTargetItem == ITEM_BOW) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) >= ITEM_BOW_FIRE) &&
-                        (BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) <= ITEM_BOW_LIGHT)) {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT);
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT);
-                        Interface_LoadItemIcon(play, EQUIP_SLOT_C_DOWN);
-                    }
-                    else if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) >= ITEM_BOW_FIRE) &&
-                        (BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) <= ITEM_BOW_LIGHT)) {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT);
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT);
-                        Interface_LoadItemIcon(play, EQUIP_SLOT_C_RIGHT);
-                    }
-                }
-
-                // Equip item on CLeft
-                BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) = pauseCtx->equipTargetItem;
-                C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT) = pauseCtx->equipTargetSlot;
-                Interface_LoadItemIconImpl(play, EQUIP_SLOT_C_LEFT);
-            }
-            else if (pauseCtx->equipTargetCBtn == PAUSE_EQUIP_C_DOWN) {
-                // Swap if item is already equipped on CLeft or CRight.
-                if (pauseCtx->equipTargetSlot == C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) & 0xFF) != ITEM_NONE) {
-                        if ((pauseCtx->equipTargetItem >= 0xB5) && (pauseCtx->equipTargetItem < 0xB8) &&
-                            (((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) & 0xFF) == ITEM_BOW) ||
-                                (((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) & 0xFF) >= ITEM_BOW_FIRE) &&
-                                    ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) & 0xFF) <= ITEM_BOW_LIGHT)))) {
-                            pauseCtx->equipTargetItem -= 0xB5 - ITEM_BOW_FIRE;
-                            pauseCtx->equipTargetSlot = SLOT_BOW;
-                        }
-                        else {
-                            BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN);
-                            C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN);
-                            Interface_LoadItemIcon(play, EQUIP_SLOT_C_LEFT);
-                        }
-                    }
-                    else {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) = ITEM_NONE;
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT) = SLOT_NONE;
-                    }
-                }
-                else if (pauseCtx->equipTargetSlot == C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) & 0xFF) != ITEM_NONE) {
-                        if ((pauseCtx->equipTargetItem >= 0xB5) && (pauseCtx->equipTargetItem < 0xB8) &&
-                            (((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) & 0xFF) == ITEM_BOW) ||
-                                (((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) & 0xFF) >= ITEM_BOW_FIRE) &&
-                                    ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) & 0xFF) <= ITEM_BOW_LIGHT)))) {
-                            pauseCtx->equipTargetItem -= 0xB5 - ITEM_BOW_FIRE;
-                            pauseCtx->equipTargetSlot = SLOT_BOW;
-                        }
-                        else {
-                            BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN);
-                            C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN);
-                            Interface_LoadItemIcon(play, EQUIP_SLOT_C_RIGHT);
-                        }
-                    }
-                    else {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) = ITEM_NONE;
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT) = SLOT_NONE;
-                    }
-                }
-
-                // Special case for magic arrows
-                if ((pauseCtx->equipTargetItem >= 0xB5) && (pauseCtx->equipTargetItem < 0xB8)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) == ITEM_BOW) ||
-                        ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) >= ITEM_BOW_FIRE) &&
-                            (BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) <= ITEM_BOW_LIGHT))) {
-                        pauseCtx->equipTargetItem -= 0xB5 - ITEM_BOW_FIRE;
-                        pauseCtx->equipTargetSlot = SLOT_BOW;
-                    }
-                }
-                else if (pauseCtx->equipTargetItem == ITEM_BOW) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) >= ITEM_BOW_FIRE) &&
-                        (BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) <= ITEM_BOW_LIGHT)) {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN);
-                        Interface_LoadItemIcon(play, EQUIP_SLOT_C_LEFT);
-                    }
-                    else if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) >= ITEM_BOW_FIRE) &&
-                        (BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) <= ITEM_BOW_LIGHT)) {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN);
-                        Interface_LoadItemIcon(play, EQUIP_SLOT_C_RIGHT);
-                    }
-                }
-
-                // Equip item on CDown
-                BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = pauseCtx->equipTargetItem;
-                C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = pauseCtx->equipTargetSlot;
-                Interface_LoadItemIconImpl(play, EQUIP_SLOT_C_DOWN);
-            }
-            else { // (pauseCtx->equipTargetCBtn == PAUSE_EQUIP_C_RIGHT)
-                // Swap if item is already equipped on CLeft or CDown.
-                if (pauseCtx->equipTargetSlot == C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) & 0xFF) != ITEM_NONE) {
-                        if ((pauseCtx->equipTargetItem >= 0xB5) && (pauseCtx->equipTargetItem < 0xB8) &&
-                            (((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) & 0xFF) == ITEM_BOW) ||
-                                (((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) & 0xFF) >= ITEM_BOW_FIRE) &&
-                                    ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) & 0xFF) <= ITEM_BOW_LIGHT)))) {
-                            pauseCtx->equipTargetItem -= 0xB5 - ITEM_BOW_FIRE;
-                            pauseCtx->equipTargetSlot = SLOT_BOW;
-                        }
-                        else {
-                            BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT);
-                            C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT);
-                            Interface_LoadItemIcon(play, EQUIP_SLOT_C_LEFT);
-                        }
-                    }
-                    else {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) = ITEM_NONE;
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT) = SLOT_NONE;
-                    }
-                }
-                else if (pauseCtx->equipTargetSlot == C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) & 0xFF) != ITEM_NONE) {
-                        if ((pauseCtx->equipTargetItem >= 0xB5) && (pauseCtx->equipTargetItem < 0xB8) &&
-                            (((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) & 0xFF) == ITEM_BOW) ||
-                                (((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) & 0xFF) >= ITEM_BOW_FIRE) &&
-                                    ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) & 0xFF) <= ITEM_BOW_LIGHT)))) {
-                            pauseCtx->equipTargetItem -= 0xB5 - ITEM_BOW_FIRE;
-                            pauseCtx->equipTargetSlot = SLOT_BOW;
-                        }
-                        else {
-                            BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT);
-                            C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT);
-                            Interface_LoadItemIcon(play, EQUIP_SLOT_C_DOWN);
-                        }
-                    }
-                    else {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = ITEM_NONE;
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = SLOT_NONE;
-                    }
-                }
-
-                // Special case for magic arrows
-                if ((pauseCtx->equipTargetItem >= 0xB5) && (pauseCtx->equipTargetItem < 0xB8)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) == ITEM_BOW) ||
-                        ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) >= ITEM_BOW_FIRE) &&
-                            (BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) <= ITEM_BOW_LIGHT))) {
-                        pauseCtx->equipTargetItem -= 0xB5 - ITEM_BOW_FIRE;
-                        pauseCtx->equipTargetSlot = SLOT_BOW;
-                    }
-                }
-                else if (pauseCtx->equipTargetItem == ITEM_BOW) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) >= ITEM_BOW_FIRE) &&
-                        (BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) <= ITEM_BOW_LIGHT)) {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT);
-                        Interface_LoadItemIcon(play, EQUIP_SLOT_C_LEFT);
-                    }
-                    else if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) >= ITEM_BOW_FIRE) &&
-                        (BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) <= ITEM_BOW_LIGHT)) {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT);
-                        Interface_LoadItemIcon(play, EQUIP_SLOT_C_DOWN);
-                    }
-                }
-
-                // Equip item on CRight
-                BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) = pauseCtx->equipTargetItem;
-                C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT) = pauseCtx->equipTargetSlot;
-                Interface_LoadItemIconImpl(play, EQUIP_SLOT_C_RIGHT);
-            }
-
-            // Reset params
-            pauseCtx->mainState = PAUSE_MAIN_STATE_IDLE;
-            sEquipAnimTimer = 10;
-            pauseCtx->equipAnimScale = 320;
-            pauseCtx->equipAnimShrinkRate = 40;
-        }
-    }
-    else {
-        sEquipMagicArrowSlotHoldTimer--;
-        if (sEquipMagicArrowSlotHoldTimer == 0) {
-            pauseCtx->equipAnimAlpha = 255;
-        }
-    }
 }
 
 // @modern_layout Change position of the equip animation destination.
-s16 sMaskCButtonPosX[] = { 350, 550, 1140 };
-s16 sMaskCButtonPosY[] = { 950, 1100, 1100 };
-extern s16 sMaskEquipState;
-extern s16 sMaskEquipMagicArrowSlotHoldTimer;
-extern s16 sMaskEquipAnimTimer;
+extern s16 sMaskCButtonPosX[3];
+extern s16 sMaskCButtonPosY[3];
 
-RECOMP_PATCH void KaleidoScope_UpdateMaskEquip(PlayState* play) {
-    static s16 sMaskEquipMagicArrowBowSlotHoldTimer = 0;
-    PauseContext* pauseCtx = &play->pauseCtx;
-    Vtx* bowItemVtx;
-    u16 offsetX;
-    u16 offsetY;
+RECOMP_HOOK("KaleidoScope_UpdateMaskEquip") void KaleidoScope_UpdateMaskEquip_Init(PlayState* play) {
+    sMaskCButtonPosX[0] = 350;
+    sMaskCButtonPosX[1] = 550;
 
-    // Grow glowing orb when equipping magic arrows
-    if (sMaskEquipState == EQUIP_STATE_MAGIC_ARROW_GROW_ORB) {
-        pauseCtx->equipAnimAlpha += 14;
-        if (pauseCtx->equipAnimAlpha > 255) {
-            pauseCtx->equipAnimAlpha = 254;
-            sMaskEquipState++;
-        }
-        // Hover over magic arrow slot when the next state is reached
-        sMaskEquipMagicArrowSlotHoldTimer = 5;
-        return;
-    }
+    sMaskCButtonPosY[0] = 950;
+    sMaskCButtonPosY[1] = 1110;
+}
 
-    if (sMaskEquipState == EQUIP_STATE_MAGIC_ARROW_HOVER_OVER_BOW_SLOT) {
-        sMaskEquipMagicArrowBowSlotHoldTimer--;
+// @modern_layout To keep the buttons consistent, if there is no item in the B-button, keep the alpha at max.
+PlayState* play_save;
 
-        if (sMaskEquipMagicArrowBowSlotHoldTimer == 0) {
-            pauseCtx->equipTargetItem -= 0xB5 - ITEM_BOW_FIRE;
-            pauseCtx->equipTargetSlot = SLOT_BOW;
-            sMaskEquipAnimTimer = 6;
-            pauseCtx->equipAnimScale = 320;
-            pauseCtx->equipAnimShrinkRate = 40;
-            sMaskEquipState++;
-            Audio_PlaySfx(NA_SE_SY_SYNTH_MAGIC_ARROW);
-        }
-        return;
-    }
+RECOMP_HOOK("Interface_UpdateButtonAlphasByStatus") void Interface_UpdateButtonAlphasByStatus_Init(PlayState* play, s16 risingAlpha) {
+    play_save = play;
+}
 
-    if (sMaskEquipState == EQUIP_STATE_MAGIC_ARROW_MOVE_TO_BOW_SLOT) {
-        //! Note: Copied from OoT when `SLOT_BOW` was still valued at 3.
-        // Due to a shift, `SLOT_ARROW_ICE` now occupies slot 3 but this value was not updated
-        // Block is never reached as you can not equip magic arrows from the mask page
-        bowItemVtx = &pauseCtx->itemVtx[SLOT_ARROW_ICE * 4];
-        offsetX = ABS_ALT(pauseCtx->equipAnimX - bowItemVtx->v.ob[0] * 10) / sMaskEquipAnimTimer;
-        offsetY = ABS_ALT(pauseCtx->equipAnimY - bowItemVtx->v.ob[1] * 10) / sMaskEquipAnimTimer;
-    }
-    else {
-        offsetX = ABS_ALT(pauseCtx->equipAnimX - sMaskCButtonPosX[pauseCtx->equipTargetCBtn]) / sMaskEquipAnimTimer;
-        offsetY = ABS_ALT(pauseCtx->equipAnimY - sMaskCButtonPosY[pauseCtx->equipTargetCBtn]) / sMaskEquipAnimTimer;
-    }
-
-    if ((pauseCtx->equipTargetItem >= 0xB5) && (pauseCtx->equipAnimAlpha < 254)) {
-        pauseCtx->equipAnimAlpha += 14;
-        if (pauseCtx->equipAnimAlpha > 255) {
-            pauseCtx->equipAnimAlpha = 254;
-        }
-        sMaskEquipMagicArrowSlotHoldTimer = 5;
-        return;
-    }
-
-    if (sMaskEquipMagicArrowSlotHoldTimer == 0) {
-        pauseCtx->equipAnimScale -= pauseCtx->equipAnimShrinkRate / sMaskEquipAnimTimer;
-        pauseCtx->equipAnimShrinkRate -= pauseCtx->equipAnimShrinkRate / sMaskEquipAnimTimer;
-
-        // Update coordinates of item icon while being equipped
-        if (sMaskEquipState == EQUIP_STATE_MAGIC_ARROW_MOVE_TO_BOW_SLOT) {
-            // target is the bow slot
-            if (pauseCtx->equipAnimX >= (pauseCtx->itemVtx[12].v.ob[0] * 10)) {
-                pauseCtx->equipAnimX -= offsetX;
-            }
-            else {
-                pauseCtx->equipAnimX += offsetX;
-            }
-
-            if (pauseCtx->equipAnimY >= (pauseCtx->itemVtx[12].v.ob[1] * 10)) {
-                pauseCtx->equipAnimY -= offsetY;
-            }
-            else {
-                pauseCtx->equipAnimY += offsetY;
-            }
-        }
-        else {
-            // target is the c button
-            if (pauseCtx->equipAnimX >= sMaskCButtonPosX[pauseCtx->equipTargetCBtn]) {
-                pauseCtx->equipAnimX -= offsetX;
-            }
-            else {
-                pauseCtx->equipAnimX += offsetX;
-            }
-
-            if (pauseCtx->equipAnimY >= sMaskCButtonPosY[pauseCtx->equipTargetCBtn]) {
-                pauseCtx->equipAnimY -= offsetY;
-            }
-            else {
-                pauseCtx->equipAnimY += offsetY;
-            }
-        }
-
-        sMaskEquipAnimTimer--;
-        if (sMaskEquipAnimTimer == 0) {
-            if (sMaskEquipState == EQUIP_STATE_MAGIC_ARROW_MOVE_TO_BOW_SLOT) {
-                sMaskEquipState++;
-                sMaskEquipMagicArrowBowSlotHoldTimer = 4;
-                return;
-            }
-
-            // Equip mask onto c buttons
-            if (pauseCtx->equipTargetCBtn == PAUSE_EQUIP_C_LEFT) {
-                // Swap if mask is already equipped on CDown or CRight.
-                if (pauseCtx->equipTargetSlot == C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) & 0xFF) != ITEM_NONE) {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT);
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT);
-                        Interface_LoadItemIcon(play, EQUIP_SLOT_C_DOWN);
-                    }
-                    else {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = ITEM_NONE;
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = SLOT_NONE;
-                    }
-                }
-                else if (pauseCtx->equipTargetSlot == C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) & 0xFF) != ITEM_NONE) {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT);
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT);
-                        Interface_LoadItemIcon(play, EQUIP_SLOT_C_RIGHT);
-                    }
-                    else {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) = ITEM_NONE;
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT) = SLOT_NONE;
-                    }
-                }
-
-                // Equip mask on CLeft
-                BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) = pauseCtx->equipTargetItem;
-                C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT) = pauseCtx->equipTargetSlot;
-                Interface_LoadItemIconImpl(play, EQUIP_SLOT_C_LEFT);
-            }
-            else if (pauseCtx->equipTargetCBtn == PAUSE_EQUIP_C_DOWN) {
-                // Swap if mask is already equipped on CLeft or CRight.
-                if (pauseCtx->equipTargetSlot == C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) & 0xFF) != ITEM_NONE) {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN);
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN);
-                        Interface_LoadItemIcon(play, EQUIP_SLOT_C_LEFT);
-                    }
-                    else {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) = ITEM_NONE;
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT) = SLOT_NONE;
-                    }
-                }
-                else if (pauseCtx->equipTargetSlot == C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) & 0xFF) != ITEM_NONE) {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN);
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN);
-                        Interface_LoadItemIcon(play, EQUIP_SLOT_C_RIGHT);
-                    }
-                    else {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) = ITEM_NONE;
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT) = SLOT_NONE;
-                    }
-                }
-
-                // Equip mask on CDown
-                BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = pauseCtx->equipTargetItem;
-                C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = pauseCtx->equipTargetSlot;
-                Interface_LoadItemIconImpl(play, EQUIP_SLOT_C_DOWN);
-            }
-            else { // (pauseCtx->equipTargetCBtn == PAUSE_EQUIP_C_RIGHT)
-                // Swap if mask is already equipped on CLeft or CDown.
-                if (pauseCtx->equipTargetSlot == C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) & 0xFF) != ITEM_NONE) {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT);
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT);
-                        Interface_LoadItemIcon(play, EQUIP_SLOT_C_LEFT);
-                    }
-                    else {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_LEFT) = ITEM_NONE;
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_LEFT) = SLOT_NONE;
-                    }
-                }
-                else if (pauseCtx->equipTargetSlot == C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN)) {
-                    if ((BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) & 0xFF) != ITEM_NONE) {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT);
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT);
-                        Interface_LoadItemIcon(play, EQUIP_SLOT_C_DOWN);
-                    }
-                    else {
-                        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = ITEM_NONE;
-                        C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = SLOT_NONE;
-                    }
-                }
-
-                // Equip mask on CRight
-                BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_RIGHT) = pauseCtx->equipTargetItem;
-                C_SLOT_EQUIP(0, EQUIP_SLOT_C_RIGHT) = pauseCtx->equipTargetSlot;
-                Interface_LoadItemIconImpl(play, EQUIP_SLOT_C_RIGHT);
-            }
-
-            // Reset params
-            pauseCtx->mainState = PAUSE_MAIN_STATE_IDLE;
-            sMaskEquipAnimTimer = 10;
-            pauseCtx->equipAnimScale = 320;
-            pauseCtx->equipAnimShrinkRate = 40;
-        }
-    }
-    else {
-        sMaskEquipMagicArrowSlotHoldTimer--;
-        if (sMaskEquipMagicArrowSlotHoldTimer == 0) {
-            pauseCtx->equipAnimAlpha = 255;
-        }
+RECOMP_HOOK_RETURN("Interface_UpdateButtonAlphasByStatus") void Interface_UpdateButtonAlphasByStatus_Return() {
+    if (bButtonEmptyDrawn == true) {
+        (&play_save->interfaceCtx)->bAlpha = 255;
     }
 }
