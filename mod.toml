@@ -111,8 +111,6 @@ name = "Text Replacement"
 description = """
 If enabled, all text references to the old control scheme will be changed to reflect modern controllers.
 
-This only really changes mentions of "Z Targeting" to read "ZL Targeting".
-
 Requires a restart of the game to take effect.
 """
 type = "Enum"
