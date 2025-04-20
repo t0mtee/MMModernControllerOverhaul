@@ -1,0 +1,30 @@
+{
+    "configuration": {
+        "autoPath": "rice",
+        "configurationVersion": 2,
+        "hashVersion": 2
+    },
+    "textures": [
+        {
+            "hashes": {
+                "rice": "218cfc10#3#1",
+                "rt64": "4c65d64d236b24c1"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "acf93890#3#1",
+                "rt64": "a094a7d3e6e20aa6"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "e973d922#3#1",
+                "rt64": "7741520a38390c13"
+            },
+            "path": ""
+        }
+	]
+}

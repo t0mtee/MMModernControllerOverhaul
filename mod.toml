@@ -5,10 +5,26 @@
 
 # Unique ID of this mod. Pick something long enough that it'll never be the same as any other mod.
 # The name displayed in the mod management menu is separate from this so this doesn't need to be human readable.
-id = "mm_recomp_modern_hud_layout"
+id = "mm_modern_controller_overhaul"
 
 # Version of this mod.
-version = "1.0.0"
+version = "2.0.0"
+
+# The name that will show up for this mod in the mod menu. This should be human readable.
+display_name = "Modern Controller Overhaul"
+
+# The description that will show up when this mod is displayed in the mod menu. This should be human readable.
+description =  """
+This mod aims to overhaul the HUD and UI surrounding the game's control scheme in order to align it as closely as possible with modern controllers.
+
+It does this through repositioning HUD elements, replacing text and textures mentioning control schemes, and fixing inconsistencies and bugs with the original game.
+
+GitHub Repository: https://github.com/t0mtee/MMRecompModernHUD
+"""
+
+# A short description that will show up in this mod's entry in the mod list. This should be human readable and kept short
+# to prevent it from being cut off due to the limited space.
+short_description = "C-buttons? Never heard of them."
 
 # Authors of this mod.
 authors = [ "tomtee" ]
@@ -22,7 +38,7 @@ minimum_recomp_version = "1.2.0"
 # Dependency mods. Each entry is the mod's ID and then an optional minimum version of the dependency mod.
 dependencies = [
 # Example dependency:
-#    "modname:1.0.0"
+    "MM_EZ_Text_Replacer_API:2.0.0"
 ]
 
 # Native libraries (e.g. DLLs) and the functions they export.
@@ -37,9 +53,68 @@ native_libraries = [
 # Input elf file to generate a mod from.
 elf_path = "build/mod.elf"
 
+# Output mod filename.
+mod_filename = "mm_modern_controller_overhaul"
+
 # Reference symbol files.
 func_reference_syms_file = "Zelda64RecompSyms/mm.us.rev1.syms.toml"
 data_reference_syms_files = [ "Zelda64RecompSyms/mm.us.rev1.datasyms.toml", "Zelda64RecompSyms/mm.us.rev1.datasyms_static.toml" ]
 
 # Additional files to include in the mod.
-additional_files = [ ]
+additional_files = [ "thumb.png", "textures/rt64/high-res/rt64.json",
+                    "textures/rt64/high-res/rt64-low-mip-cache.bin",
+                    "textures/rt64/high-res/textures/8ea0aa6902871cee.dds",
+                    "textures/rt64/high-res/textures/32390d4efccf727b.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#218CFC10#3#1_all.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#ACF93890#3#1_all.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#E973D922#3#1_all.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#48D41F13#4#0_all.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#C090A2AC#3#1_all.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#8D30266D#4#0_all.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#C8D66332#4#0_all.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#844E1CE5#3#1_all.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#F0375507#3#1_all.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#90547324#4#0_all.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#B14134FA#4#0_all.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#0A7871D8#4#0_all.dds",
+                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#9C51DC08#4#0_all.dds" ]
+
+[[manifest.config_options]]
+id = "icon_addition"
+name = "Empty A and B button icons"
+description = """
+If enabled, when the A and B buttons are empty / have no action, they'll show the button they represent, like the C-buttons do.
+"""
+type = "Enum"
+options = [ "Disabled", "Enabled" ]
+default = "Enabled"
+
+[[manifest.config_options]]
+id = "_recomp_texture_pack_enabled"
+name = "Texture Replacement"
+description = """
+If enabled, all texture references to C-buttons and other N64-era inputs will be changed to reflect modern Nintendo controllers, based on the default control scheme.
+
+Uses HD textures. I've made some low-res textures, but they're not complete - I don't have much desire to complete them either as I use MM Reloaded.
+
+Credit to Nerrel and GhostlyDark for the base of most of the HD textures.
+
+I'll happily take contributions to improve textures! Contact me on Discord (tomtee_) or open a PR on Github.
+"""
+type = "Enum"
+options = [ "Disabled", "Enabled" ]
+default = "Enabled"
+
+[[manifest.config_options]]
+id = "text_replacement"
+name = "Text Replacement"
+description = """
+If enabled, all text references to the old control scheme will be changed to reflect modern controllers.
+
+This only really changes mentions of "Z Targeting" to read "ZL Targeting".
+
+Requires a restart of the game to take effect.
+"""
+type = "Enum"
+options = [ "Disabled", "Enabled" ]
+default = "Enabled"
