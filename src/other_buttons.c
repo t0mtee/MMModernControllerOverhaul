@@ -31,22 +31,42 @@ extern TexturePtr gTatlCUpFRATex[];
 extern TexturePtr gTatlCUpESPTex[];
 extern TexturePtr gButtonBackgroundTex[];
 
-PlayState* Interface_DrawItemButtons_play;
-u16 Interface_DrawItemButtons_pause_state;
+PlayState* bPlayState;
+u16 bPauseState;
 
 RECOMP_HOOK("Interface_DrawItemButtons") void Interface_DrawItemButtons_Init(PlayState* play) {
-    Interface_DrawItemButtons_play = play;
-    // @modern_layout Disable Start button in pause menu by tricking conditions
-    Interface_DrawItemButtons_pause_state = (&play->pauseCtx)->state;
-    (&play->pauseCtx)->state = PAUSE_STATE_OFF;
+    bPlayState = play;
 }
 
-Gfx* Gfx_DrawRect_DropShadow_gfx = NULL;
+extern TexturePtr gButtonBackgroundTex[];
+Gfx* bGfx_o = NULL;
+
+RECOMP_HOOK("Gfx_DrawTexRectIA8_DropShadow") void Gfx_DrawTexRectIA8_DropShadow_Init(Gfx* gfx, TexturePtr texture, s16 textureWidth, s16 textureHeight,
+    s16 rectLeft, s16 rectTop, s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy, s16 r, s16 g, s16 b, s16 a) {
+    // @modern_layout If being run for the B-button
+    if (texture == gButtonBackgroundTex && rectWidth == 0x1D) {
+        // @modern_layout Trick conditions to disable Pause button. Do it after D-pad has stopped being drawn.
+        bPauseState = (&bPlayState->pauseCtx)->state;
+        (&bPlayState->pauseCtx)->state = PAUSE_STATE_OFF;
+        // @modern_layout Save Gfx for use in fixing bug
+        bGfx_o = gfx;
+    }
+}
+
+RECOMP_HOOK_RETURN("Gfx_DrawTexRectIA8_DropShadow") void Gfx_DrawTexRectIA8_DropShadow_Return() {
+    // @modern_layout Fixes a vanilla bug that becomes more noticable with this mod due to how it disables the Start button
+    // @modern_layout The bug causes the ammo count to be green under certain conditions before gaining the magic meter at the start of the game
+    // @modern_layout This fix ensures that code in the magic meter function that amends this bug is present all the time
+    if (bGfx_o != NULL){
+        gDPSetEnvColor(bGfx_o, 0, 0, 0, 255);
+        bGfx_o = NULL;
+    }
+}
 
 RECOMP_HOOK("Gfx_DrawRect_DropShadow") void Gfx_DrawRect_DropShadow_Init(Gfx* gfx, s16 rectLeft, s16 rectTop, s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy, s16 r, s16 g, s16 b, s16 a) {
     // @modern_layout If drawing C-Up button
-    if (rectLeft == 0xFE && rectTop == 0x10 && rectWidth == 0x10 && rectHeight == 0x10 && dsdx == 0x800 && dtdy == 0x800 && r == 0xFF && g == 0xF0 && b == 0) {
-        Gfx_DrawRect_DropShadow_gfx = gfx;
+    if (rectWidth == 0x10 && rectHeight == 0x10 && r == 0xFF && g == 0xF0 && b == 0) {
+        bGfx_o = gfx;
     }
 }
 
@@ -54,15 +74,15 @@ extern Gfx* Gfx_DrawRect_DropShadow(Gfx* gfx, s16 rectLeft, s16 rectTop, s16 rec
 
 RECOMP_HOOK_RETURN("Interface_DrawItemButtons") void Interface_DrawItemButtons_Return() {
     // @modern_layout Reset pause state
-    (&Interface_DrawItemButtons_play->pauseCtx)->state = Interface_DrawItemButtons_pause_state;
+    (&bPlayState->pauseCtx)->state = bPauseState;
 
-    if (Gfx_DrawRect_DropShadow_gfx != NULL) {
+    if (bGfx_o != NULL) {
         static TexturePtr cUpLabelTextures[] = {
             gTatlCUpENGTex, gTatlCUpENGTex, gTatlCUpGERTex, gTatlCUpFRATex, gTatlCUpESPTex,
         };
         s16 temp;
 
-        OPEN_DISPS(Interface_DrawItemButtons_play->state.gfxCtx);
+        OPEN_DISPS(bPlayState->state.gfxCtx);
 
         // +++++++ code by Wiseguy +++++++
         
@@ -76,13 +96,13 @@ RECOMP_HOOK_RETURN("Interface_DrawItemButtons") void Interface_DrawItemButtons_R
 
         // @modern_layout Search from the start of the C-Up displaylist commands to find the texrect command that drew the button itself.
         // Limit searching until reaching the current OVERLAY_DISP value.
-        Gfx* c_up_texrect = find_dl_commands(Gfx_DrawRect_DropShadow_gfx, OVERLAY_DISP, to_compare, ARRAY_COUNT(to_compare));
+        Gfx* c_up_texrect = find_dl_commands(bGfx_o, OVERLAY_DISP, to_compare, ARRAY_COUNT(to_compare));
         if (c_up_texrect != NULL) {
             // @modern_layout Allocate a buffer to hold the new commands. Should only need 26 commands, but allocate 32 just to be safe.
-            Gfx* replacement_dl = GRAPH_ALLOC(Interface_DrawItemButtons_play->state.gfxCtx, sizeof(Gfx) * 32);
+            Gfx* replacement_dl = GRAPH_ALLOC(bPlayState->state.gfxCtx, sizeof(Gfx) * 32);
 
             // @modern_layout Overwrite the beginning of the C-Up drop shadow graphics commands with a branch to the new displaylist.
-            gSPBranchList(Gfx_DrawRect_DropShadow_gfx, replacement_dl);
+            gSPBranchList(bGfx_o, replacement_dl);
 
             // @modern_layout Draw correct C-Up on new displaylist.
             
@@ -92,14 +112,14 @@ RECOMP_HOOK_RETURN("Interface_DrawItemButtons") void Interface_DrawItemButtons_R
             if ((gSaveContext.hudVisibility == HUD_VISIBILITY_NONE) ||
                 (gSaveContext.hudVisibility == HUD_VISIBILITY_NONE_ALT) ||
                 (gSaveContext.hudVisibility == HUD_VISIBILITY_A_HEARTS_MAGIC_WITH_OVERWRITE) ||
-                ((&Interface_DrawItemButtons_play->msgCtx)->msgMode != MSGMODE_NONE)) {
+                ((&bPlayState->msgCtx)->msgMode != MSGMODE_NONE)) {
                 temp = 0;
             }
-            else if (GET_PLAYER(Interface_DrawItemButtons_play)->stateFlags1 & PLAYER_STATE1_200000) {
+            else if (GET_PLAYER(bPlayState)->stateFlags1 & PLAYER_STATE1_200000) {
                 temp = 70;
             }
             else {
-                temp = (&Interface_DrawItemButtons_play->interfaceCtx)->aAlpha;
+                temp = (&bPlayState->interfaceCtx)->aAlpha;
             }
 
             // @modern_layout Reposition C-Up button
@@ -124,33 +144,12 @@ RECOMP_HOOK_RETURN("Interface_DrawItemButtons") void Interface_DrawItemButtons_R
         }
         
         // @modern_layout Jump back to before the C-Up was drawn
-        gSPBranchList(OVERLAY_DISP, Gfx_DrawRect_DropShadow_gfx);
+        gSPBranchList(OVERLAY_DISP, bGfx_o);
     
-        CLOSE_DISPS(Interface_DrawItemButtons_play->state.gfxCtx);
+        CLOSE_DISPS(bPlayState->state.gfxCtx);
 
         // ------- code by Wiseguy -------
 
-        Gfx_DrawRect_DropShadow_gfx = NULL;
-    }
-}
-
-// @modern_layout Fixes a vanilla bug that becomes more noticable with this mod due to how it disables the Start button
-// @modern_layout The bug causes the ammo count to be green under certain conditions before gaining the magic meter at the start of the game
-// @modern_layout This fix ensures that code in the magic meter function that amends this bug is present all the time
-extern TexturePtr gButtonBackgroundTex[];
-Gfx* Gfx_DrawTexRectIA8_DropShadow_gfx = NULL;
-
-RECOMP_HOOK("Gfx_DrawTexRectIA8_DropShadow") void Gfx_DrawTexRectIA8_DropShadow_Init(Gfx* gfx, TexturePtr texture, s16 textureWidth, s16 textureHeight,
-    s16 rectLeft, s16 rectTop, s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy, s16 r, s16 g, s16 b, s16 a) {
-    if (texture == gButtonBackgroundTex && textureWidth == 0x20 && textureHeight == 0x20 && rectLeft == 218 &&
-    rectTop == 55 && rectWidth == 0x1D && rectHeight == 0x1D && dsdx == 0x23F * 2 && dtdy == 0x23F * 2 && r == 100 && g == 255 && b == 120) {
-        Gfx_DrawTexRectIA8_DropShadow_gfx = gfx;
-    }
-}
-
-RECOMP_HOOK_RETURN("Gfx_DrawTexRectIA8_DropShadow") void Gfx_DrawTexRectIA8_DropShadow_Return() {
-    if (Gfx_DrawTexRectIA8_DropShadow_gfx != NULL){
-        gDPSetEnvColor(Gfx_DrawTexRectIA8_DropShadow_gfx, 0, 0, 0, 255);
-        Gfx_DrawTexRectIA8_DropShadow_gfx = NULL;
+        bGfx_o = NULL;
     }
 }

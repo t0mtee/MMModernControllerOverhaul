@@ -1,0 +1,7 @@
+Variables that begin with:
+b are buffer variables - storing information to be used later on.
+m are mod variables - simply variables used for mod functionality
+t are textures
+
+Variables that end with an underscore then a letter are due to duplicate symbol names between source files.
+The letter indicates which file they are in.

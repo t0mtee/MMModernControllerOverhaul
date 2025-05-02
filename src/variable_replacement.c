@@ -94,14 +94,14 @@ RECOMP_HOOK_RETURN("Interface_DrawItemIconTexture") void Interface_DrawItemIconT
 // @modern_layout when assessing C-buttons with no items.
 // @modern_layout This leads to unpredictable behaviour, and Deku Link alone will have greyed out empty C-buttons.
 // @modern_layout To fix this without causing any potential problems, save the value at the bugged index, replace it to true, then revert it.
-u8 gPlayerFormItemRestrictions_save;
+u8 bU8;
 extern u8 gPlayerFormItemRestrictions[][114];
 
 RECOMP_HOOK("Interface_UpdateButtonsPart2") void Interface_UpdateButtonsPart2_Init(PlayState* play) {
-    gPlayerFormItemRestrictions_save = gPlayerFormItemRestrictions[PLAYER_FORM_DEKU][255];
+    bU8 = gPlayerFormItemRestrictions[PLAYER_FORM_DEKU][255];
     gPlayerFormItemRestrictions[PLAYER_FORM_DEKU][255] = true;
 }
 
 RECOMP_HOOK_RETURN("Interface_UpdateButtonsPart2") void Interface_UpdateButtonsPart2_Return() {
-    gPlayerFormItemRestrictions[PLAYER_FORM_DEKU][255] = gPlayerFormItemRestrictions_save;
+    gPlayerFormItemRestrictions[PLAYER_FORM_DEKU][255] = bU8;
 }
