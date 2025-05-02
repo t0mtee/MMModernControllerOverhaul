@@ -31,11 +31,11 @@ extern TexturePtr gTatlCUpFRATex[];
 extern TexturePtr gTatlCUpESPTex[];
 extern TexturePtr gButtonBackgroundTex[];
 
-PlayState* bPlayState;
+PlayState* bPlayState_o;
 u16 bPauseState;
 
 RECOMP_HOOK("Interface_DrawItemButtons") void Interface_DrawItemButtons_Init(PlayState* play) {
-    bPlayState = play;
+    bPlayState_o = play;
 }
 
 extern TexturePtr gButtonBackgroundTex[];
@@ -46,8 +46,8 @@ RECOMP_HOOK("Gfx_DrawTexRectIA8_DropShadow") void Gfx_DrawTexRectIA8_DropShadow_
     // @modern_layout If being run for the B-button
     if (texture == gButtonBackgroundTex && rectWidth == 0x1D) {
         // @modern_layout Trick conditions to disable Pause button. Do it after D-pad has stopped being drawn.
-        bPauseState = (&bPlayState->pauseCtx)->state;
-        (&bPlayState->pauseCtx)->state = PAUSE_STATE_OFF;
+        bPauseState = (&bPlayState_o->pauseCtx)->state;
+        (&bPlayState_o->pauseCtx)->state = PAUSE_STATE_OFF;
         // @modern_layout Save Gfx for use in fixing bug
         bGfx_o = gfx;
     }
@@ -74,7 +74,7 @@ extern Gfx* Gfx_DrawRect_DropShadow(Gfx* gfx, s16 rectLeft, s16 rectTop, s16 rec
 
 RECOMP_HOOK_RETURN("Interface_DrawItemButtons") void Interface_DrawItemButtons_Return() {
     // @modern_layout Reset pause state
-    (&bPlayState->pauseCtx)->state = bPauseState;
+    (&bPlayState_o->pauseCtx)->state = bPauseState;
 
     if (bGfx_o != NULL) {
         static TexturePtr cUpLabelTextures[] = {
@@ -82,7 +82,7 @@ RECOMP_HOOK_RETURN("Interface_DrawItemButtons") void Interface_DrawItemButtons_R
         };
         s16 temp;
 
-        OPEN_DISPS(bPlayState->state.gfxCtx);
+        OPEN_DISPS(bPlayState_o->state.gfxCtx);
 
         // +++++++ code by Wiseguy +++++++
         
@@ -99,7 +99,7 @@ RECOMP_HOOK_RETURN("Interface_DrawItemButtons") void Interface_DrawItemButtons_R
         Gfx* c_up_texrect = find_dl_commands(bGfx_o, OVERLAY_DISP, to_compare, ARRAY_COUNT(to_compare));
         if (c_up_texrect != NULL) {
             // @modern_layout Allocate a buffer to hold the new commands. Should only need 26 commands, but allocate 32 just to be safe.
-            Gfx* replacement_dl = GRAPH_ALLOC(bPlayState->state.gfxCtx, sizeof(Gfx) * 32);
+            Gfx* replacement_dl = GRAPH_ALLOC(bPlayState_o->state.gfxCtx, sizeof(Gfx) * 32);
 
             // @modern_layout Overwrite the beginning of the C-Up drop shadow graphics commands with a branch to the new displaylist.
             gSPBranchList(bGfx_o, replacement_dl);
@@ -112,14 +112,14 @@ RECOMP_HOOK_RETURN("Interface_DrawItemButtons") void Interface_DrawItemButtons_R
             if ((gSaveContext.hudVisibility == HUD_VISIBILITY_NONE) ||
                 (gSaveContext.hudVisibility == HUD_VISIBILITY_NONE_ALT) ||
                 (gSaveContext.hudVisibility == HUD_VISIBILITY_A_HEARTS_MAGIC_WITH_OVERWRITE) ||
-                ((&bPlayState->msgCtx)->msgMode != MSGMODE_NONE)) {
+                ((&bPlayState_o->msgCtx)->msgMode != MSGMODE_NONE)) {
                 temp = 0;
             }
-            else if (GET_PLAYER(bPlayState)->stateFlags1 & PLAYER_STATE1_200000) {
+            else if (GET_PLAYER(bPlayState_o)->stateFlags1 & PLAYER_STATE1_200000) {
                 temp = 70;
             }
             else {
-                temp = (&bPlayState->interfaceCtx)->aAlpha;
+                temp = (&bPlayState_o->interfaceCtx)->aAlpha;
             }
 
             // @modern_layout Reposition C-Up button
@@ -146,7 +146,7 @@ RECOMP_HOOK_RETURN("Interface_DrawItemButtons") void Interface_DrawItemButtons_R
         // @modern_layout Jump back to before the C-Up was drawn
         gSPBranchList(OVERLAY_DISP, bGfx_o);
     
-        CLOSE_DISPS(bPlayState->state.gfxCtx);
+        CLOSE_DISPS(bPlayState_o->state.gfxCtx);
 
         // ------- code by Wiseguy -------
 
