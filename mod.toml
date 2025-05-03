@@ -8,7 +8,7 @@
 id = "mm_modern_controller_overhaul"
 
 # Version of this mod.
-version = "2.1.0"
+version = "2.1.1"
 
 # The name that will show up for this mod in the mod menu. This should be human readable.
 display_name = "Modern Controller Overhaul"
@@ -110,6 +110,10 @@ id = "text_replacement"
 name = "Text Replacement"
 description = """
 If enabled, all text references to the old control scheme will be changed to reflect modern controllers.
+
+As of right now, this changes references of Z Targeting to ZL Targeting.
+
+Have I missed any text? Contact me on Discord (tomtee_) or open an issue on Github.
 
 Requires a restart of the game to take effect.
 """

@@ -237,57 +237,5 @@ EZTR_ON_INIT void replace_msgs() {
             "|05What?! You don't know about the|11|00Poe|05? If you try to use ZL|11Targeting, it vanishes.|BF|00",
             NULL
         );
-    
-        EZTR_Basic_ReplaceText(
-            0x1700,
-            EZTR_STANDARD_TEXT_BOX_II,
-            1,
-            EZTR_ICON_OCARINA_OF_TIME,
-            EZTR_NO_VALUE,
-            EZTR_NO_VALUE,
-            EZTR_NO_VALUE,
-            true,
-            "|01Ocarina of Time|11|00This musical instrument is filled|11with memories of Princess Zelda.|11|12Play it with |B0 and |BB or the |04D-pad|00.|11Press |B1 to stop.|BF",
-            NULL
-        );
-    
-        EZTR_Basic_ReplaceText(
-            0x004C,
-            EZTR_TRANSLUSCENT_BLUE_TEXT_BOX,
-            1,
-            EZTR_ICON_OCARINA_OF_TIME,
-            EZTR_NO_VALUE,
-            EZTR_NO_VALUE,
-            EZTR_NO_VALUE,
-            true,
-            "|17You got the |01Ocarina of Time|11|00back!|18|11|1F|00|0A|01Princess Zelda|00 gave you this|11precious instrument.|10Set it to |04|B2|00 and play it with |B0 and|11|BB or the |04D-pad|00. Press |B1 to stop.|11|12...Suddenly, memories of |01Princess|11Zelda |00come rushing back to you...|BF",
-            NULL
-        );
-    
-        EZTR_Basic_ReplaceText(
-            0x1B59,
-            EZTR_OCARINA_STAFF,
-            0,
-            EZTR_ICON_NO_ICON,
-            EZTR_NO_VALUE,
-            EZTR_NO_VALUE,
-            EZTR_NO_VALUE,
-            true,
-            "Play it with |B0 and |BB or the |04D-pad|00.|BF",
-            NULL
-        );
-    
-        EZTR_Basic_ReplaceText(
-            0x1B5A,
-            EZTR_OCARINA_STAFF,
-            0,
-            EZTR_ICON_NO_ICON,
-            EZTR_NO_VALUE,
-            EZTR_NO_VALUE,
-            EZTR_NO_VALUE,
-            true,
-            "Play with |B0 and |BB or the |04D-pad|00.|BF",
-            NULL
-        );
     }
 }
