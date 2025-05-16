@@ -1,6 +1,6 @@
 # Majora's Mask: Recompiled Modern Controller Overhaul Mod
 
-__IMPORTANT: If you have issues with the Attack button glyph showing, it is due to a recomp bug itself where mod priority doesn't affect hook execution order. I know that Arrow Tweaks has this issue when combined with this mod. To fix it, you need to open the Arrow Tweaks (or whichever other mod) nrm file, rename a file in the archive, then rename it back to the original name. This'll be fixed in Z64Recomp 1.2.1.__
+__IMPORTANT: If you have issues with the Attack button glyph showing, it is due to a bug with recomp itself where mod priority doesn't affect hook execution order. I know that Arrow Tweaks has this issue when combined with this mod. To fix it, you need to open the Arrow Tweaks (or whichever other mod) nrm file, rename a file in the archive, then rename it back to the original name. This'll be fixed in Z64Recomp 1.2.1.__
 
 A Zelda64Recomp mod, built with cross-mod compatibility in mind, that aims to overhaul the HUD and UI surrounding the game's control scheme in order to align it as closely as possible with modern controllers.
 
