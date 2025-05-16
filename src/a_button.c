@@ -21,7 +21,6 @@ RECOMP_HOOK("View_SetViewport") void View_SetViewport_Init(View* view, Viewport*
 
     // If this function is being called for the Action button, move the viewport by the correct values.
     if (&interfaceCtx->view == view && &interfaceCtx->viewport == viewport) {
-
         switch (recomp_get_config_u32("action_button")) {
             case 0: // Up
                 viewport->topY -= 17;

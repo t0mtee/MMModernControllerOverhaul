@@ -3,16 +3,12 @@
 
 RECOMP_IMPORT("*", u32 recomp_get_config_u32(const char* key));
 
-extern s16 sItemIconTextureScales[4];
-
 Gfx to_compare[3];  // Texrects are 3 commands.
 
 Gfx mSetCombineMode[1];
 Gfx* mSetCombineMode_ptr = mSetCombineMode;
 
 RECOMP_CALLBACK("*", recomp_after_play_init) void after_play_init() {
-    // Make Attack button item icons similar size relative to button.
-    sItemIconTextureScales[0] = 0x26C;
 
     // Build a dummy DisplayList to compare against to find the vanilla C-Up texrect command. Mimic the original
     // command so it's bytewise identical.
@@ -85,9 +81,17 @@ extern s16 sAmmoDigitsYPositions[4];
                             sCButtonPosY[button] = 1150 - vShoulderEquipOffset;         /* Item Equip Y */  \
 
 int vShoulderOffset;
+extern s16 sItemIconTextureScales[4];
 
 // Set here so that config changes have immediate effect.
 RECOMP_CALLBACK("*", recomp_on_play_main) void on_play_main() {
+    if (recomp_get_config_u32("attack_icon_scale")) {
+        // Make Attack button item icons similar size relative to button.
+        sItemIconTextureScales[0] = 0x26C;
+    } else {
+        sItemIconTextureScales[0] = (s16)(1.074219f * (1 << 10)) >> 1;
+    }
+
     // Calculate the offset that should be applied to the shoulder Y position based on user's config.
     vShoulderOffset = (recomp_get_config_u32("shoulder_position") - 1) * -3;
     int vShoulderEquipOffset = vShoulderOffset * 16;

@@ -8,7 +8,7 @@
 id = "mm_modern_controller_overhaul"
 
 # Version of this mod.
-version = "3.0.0"
+version = "3.0.2"
 
 # The name that will show up for this mod in the mod menu. This should be human readable.
 display_name = "Modern Controller Overhaul"
@@ -128,6 +128,18 @@ Have I missed any text? Contact me on Discord (tomtee_) or open an issue on Gith
 type = "Enum"
 options = [ "Disabled", "ZL", "LT", "L2" ]
 default = "ZL"
+
+[[manifest.config_options]]
+id = "attack_icon_scale"
+name = "Attack Icon Scaling"
+description = """
+Would you like the items equipped to the Attack button to be scaled down slightly to align better with the icons on the C-buttons?
+
+When not using HD textures, this option can cause issues with the icon rendering. The shadows of some swords will be elongated.
+""" 
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
 
 [[manifest.config_options]]
 id = "shoulder_position"
