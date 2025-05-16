@@ -1,0 +1,12 @@
+{
+    "authors" : [
+        "tomtee", "pizza1398", "GhostlyDark", "Nerrel"
+    ],
+    "description" : "Modern Controller Overhaul texture extension, designed for 8BitDo controllers.\n\nEnsure you place ABOVE Modern Controller Overhaul.\n\nYou should keep Texture Replacement enabled in Modern Controller Overhaul.",
+    "display_name" : "MCO - 8BitDo",
+    "game_id" : "mm",
+    "id" : "MCO_8BitDo",
+    "minimum_recomp_version" : "1.2.0",
+    "short_description" : "8BitDo Controller Textures",
+    "version" : "1.0.0"
+}

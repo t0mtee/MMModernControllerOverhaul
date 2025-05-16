@@ -1,0 +1,12 @@
+{
+    "authors" : [
+        "pizza1398"
+    ],
+    "description" : "Modern Controller Overhaul texture extension, offering a more game-accurate style of button glyphs for controllers with the R1 button.\n\nEnsure you place ABOVE MCO and any other MCO texture extensions you have installed.",
+    "display_name" : "MCO - Pizza R1 Glyphs",
+    "game_id" : "mm",
+    "id" : "MCO_PizzaR1",
+    "minimum_recomp_version" : "1.2.0",
+    "short_description" : "Pizza R1 Glyph Textures",
+    "version" : "1.0.0"
+}

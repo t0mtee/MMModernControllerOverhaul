@@ -1,0 +1,48 @@
+{
+    "configuration": {
+        "autoPath": "rice",
+        "configurationVersion": 2,
+        "hashVersion": 2
+    },
+    "extraFiles": [
+        "mod.json",
+        "thumb.png"
+    ],
+    "textures": [
+        {
+            "hashes": {
+                "rice": "48d41f13#4#0",
+                "rt64": "6a4bac7fbd229fe5"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "844e1ce5#3#1",
+                "rt64": "6ee36e09873a2bea"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "f0375507#3#1",
+                "rt64": "5f3f52b6eb570b98"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "b14134fa#4#0",
+                "rt64": "e1635d442ef25527"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "0a7871d8#4#0",
+                "rt64": "eba38b7c69b5ac1f"
+            },
+            "path": ""
+        }
+	]
+}

@@ -1,0 +1,153 @@
+{
+    "configuration": {
+        "autoPath": "rice",
+        "configurationVersion": 2,
+        "hashVersion": 2
+    },
+    "extraFiles": [
+        "mod.json",
+        "thumb.png"
+    ],
+    "textures": [
+        {
+            "hashes": {
+                "rice": "",
+                "rt64": "32390d4efccf727b"
+            },
+            "path": "32390d4efccf727b"
+        },
+        {
+            "hashes": {
+                "rice": "",
+                "rt64": "e6c3403b9537feb1"
+            },
+            "path": "e6c3403b9537feb1"
+        },
+        {
+            "hashes": {
+                "rice": "218cfc10#3#1",
+                "rt64": "4c65d64d236b24c1"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "acf93890#3#1",
+                "rt64": "a094a7d3e6e20aa6"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "e973d922#3#1",
+                "rt64": "7741520a38390c13"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "48d41f13#4#0",
+                "rt64": "6a4bac7fbd229fe5"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "9c51dc08#4#0",
+                "rt64": "aa33dd1d456ac471"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "c090a2ac#3#1",
+                "rt64": "95c6f31f26c3f011"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "8d30266d#4#0",
+                "rt64": "1fe3e0994f3e5f26"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "c8d66332#4#0",
+                "rt64": "ae11ced93053c917"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "844e1ce5#3#1",
+                "rt64": "6ee36e09873a2bea"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "f0375507#3#1",
+                "rt64": "5f3f52b6eb570b98"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "b14134fa#4#0",
+                "rt64": "e1635d442ef25527"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "0a7871d8#4#0",
+                "rt64": "eba38b7c69b5ac1f"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "986cc390#4#0",
+                "rt64": "e62d8b7f46f39297"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "4845885a#4#0",
+                "rt64": "421a65d4f4bd2df6"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "60ebab83#3#1",
+                "rt64": "4898dc10cf6133e9"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "f78dc5ae#3#1",
+                "rt64": "65758ca380b39155"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "20077d68#3#1",
+                "rt64": "eddc5d59545db7db"
+            },
+            "path": ""
+        },
+        {
+            "hashes": {
+                "rice": "049c4cfa#3#1",
+                "rt64": "5a35edfa1a6584a1"
+            },
+            "path": ""
+        }
+	]
+}

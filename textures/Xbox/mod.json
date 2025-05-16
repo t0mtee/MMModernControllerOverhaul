@@ -1,0 +1,12 @@
+{
+    "authors" : [
+        "tomtee", "pizza1398", "GhostlyDark", "Nerrel"
+    ],
+    "description" : "Modern Controller Overhaul texture extension, designed for Xbox controllers or the ROG Ally with the Attack button as the down button and the Action button as the right button.\n\nEnsure you place ABOVE Modern Controller Overhaul.\n\nYou should keep Texture Replacement enabled in Modern Controller Overhaul.",
+    "display_name" : "MCO - Xbox",
+    "game_id" : "mm",
+    "id" : "MCO_Xbox",
+    "minimum_recomp_version" : "1.2.0",
+    "short_description" : "Xbox Controller Textures",
+    "version" : "1.0.0"
+}

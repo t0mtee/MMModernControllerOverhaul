@@ -8,7 +8,7 @@
 id = "mm_modern_controller_overhaul"
 
 # Version of this mod.
-version = "2.1.1"
+version = "3.0.0"
 
 # The name that will show up for this mod in the mod menu. This should be human readable.
 display_name = "Modern Controller Overhaul"
@@ -57,37 +57,42 @@ elf_path = "build/mod.elf"
 mod_filename = "mm_modern_controller_overhaul"
 
 # Reference symbol files.
-func_reference_syms_file = "Zelda64RecompSyms/mm.us.rev1.syms.toml"
-data_reference_syms_files = [ "Zelda64RecompSyms/mm.us.rev1.datasyms.toml", "Zelda64RecompSyms/mm.us.rev1.datasyms_static.toml" ]
+func_reference_syms_file = "mm.us.rev1.syms.toml"
+data_reference_syms_files = [ "mm.us.rev1.datasyms.toml", "Zelda64RecompSyms/mm.us.rev1.datasyms_static.toml", "custom-static-syms.toml" ]
 
 # Additional files to include in the mod.
-additional_files = [ "thumb.png", "textures/rt64/high-res/rt64.json",
-                    "textures/rt64/high-res/rt64-low-mip-cache.bin",
-                    "textures/rt64/high-res/textures/8ea0aa6902871cee.dds",
-                    "textures/rt64/high-res/textures/32390d4efccf727b.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#218CFC10#3#1_all.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#ACF93890#3#1_all.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#E973D922#3#1_all.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#48D41F13#4#0_all.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#C090A2AC#3#1_all.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#8D30266D#4#0_all.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#C8D66332#4#0_all.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#844E1CE5#3#1_all.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#F0375507#3#1_all.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#90547324#4#0_all.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#B14134FA#4#0_all.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#0A7871D8#4#0_all.dds",
-                    "textures/rt64/high-res/textures/ZELDA MAJORA'S MASK#9C51DC08#4#0_all.dds" ]
+additional_files = [ "thumb.png", "textures/Nintendo/rt64.json",
+                    "textures/Nintendo/rt64-low-mip-cache.bin",
+                    "textures/Nintendo/32390d4efccf727b.dds",
+                    "textures/Nintendo/e6c3403b9537feb1.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#218CFC10#3#1_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#ACF93890#3#1_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#E973D922#3#1_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#48D41F13#4#0_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#C090A2AC#3#1_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#8D30266D#4#0_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#C8D66332#4#0_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#844E1CE5#3#1_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#F0375507#3#1_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#90547324#4#0_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#B14134FA#4#0_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#0A7871D8#4#0_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#9C51DC08#4#0_all.dds",
+                    "textures/Nintendo/ZELDA MAJORA'S MASK#986CC390#4#0_all.dds" ]
 
 [[manifest.config_options]]
-id = "icon_addition"
-name = "Empty A and B button icons"
+id = "glyphs"
+name = "Button Glyphs"
 description = """
-If enabled, when the A and B buttons are empty / have no action, they'll show the button they represent, like the C-buttons do.
+Button Glyphs are the icons overlayed on a button when there's no item on it.
+
+In base Majora's Mask, only the C-buttons have button glyphs, however this mod adds functionality for drawing glyphs for the A and B button.
+
+Or you can disable them fully if you prefer a cleaner look or have a controller with a strange layout.
 """
 type = "Enum"
-options = [ "Disabled", "Enabled" ]
-default = "Enabled"
+options = [ "Disabled", "C-buttons", "All" ]
+default = "All"
 
 [[manifest.config_options]]
 id = "_recomp_texture_pack_enabled"
@@ -95,9 +100,11 @@ name = "Texture Replacement"
 description = """
 If enabled, all texture references to C-buttons and other N64-era inputs will be changed to reflect modern Nintendo controllers, based on the default control scheme.
 
-Uses HD textures. I've made some low-res textures, but they're not complete - I don't have much desire to complete them either as I use MM Reloaded.
+Make sure this mod is placed ABOVE any texture packs you may have installed if you enable this.
 
-Credit to Nerrel and GhostlyDark for the base of most of the HD textures.
+Uses HD textures. You can find textures for other controllers / control schemes on the Thunderstore page.
+
+Credit to pizza1398 for designing the pause menu switcher buttons and to Nerrel and GhostlyDark for the base of most of the HD textures.
 
 I'll happily take contributions to improve textures! Contact me on Discord (tomtee_) or open a PR on Github.
 """
@@ -111,12 +118,73 @@ name = "Text Replacement"
 description = """
 If enabled, all text references to the old control scheme will be changed to reflect modern controllers.
 
-As of right now, this changes references of Z Targeting to ZL Targeting.
+This changes references of Z Targeting to:
+- ZL Targeting for Nintendo controllers.
+- RT Targeting for Xbox controllers or the ROG Ally.
+- R2 Targeting for DualShock / 8BitDo controllers or the Steam Deck.
 
 Have I missed any text? Contact me on Discord (tomtee_) or open an issue on Github.
-
-Requires a restart of the game to take effect.
 """
 type = "Enum"
-options = [ "Disabled", "Enabled" ]
-default = "Enabled"
+options = [ "Disabled", "ZL", "LT", "L2" ]
+default = "ZL"
+
+[[manifest.config_options]]
+id = "shoulder_position"
+name = "Shoulder Button Position"
+description = """
+Would you like the shoulder button to aligned with the up button or slightly lower / higher?
+""" 
+type = "Enum"
+options = [ "Lower", "Aligned", "Higher" ]
+default = "Lower"
+
+[[manifest.config_options]]
+id = "action_button"
+name = "Action Button Position"
+description = """
+Where do you want the Action Button to be positioned?
+"""
+type = "Enum"
+options = [ "Up", "Left", "Down", "Right", "Shoulder" ]
+default = "Right"
+
+[[manifest.config_options]]
+id = "attack_button"
+name = "Attack Button Position"
+description = """
+Where do you want the Attack Button to be positioned?
+"""
+type = "Enum"
+options = [ "Up", "Left", "Down", "Right", "Shoulder" ]
+default = "Down"
+
+[[manifest.config_options]]
+id = "1_button"
+name = "C-Left Button Position"
+description = """
+Where do you want the C-Left Button to be positioned?
+"""
+type = "Enum"
+options = [ "Up", "Left", "Down", "Right", "Shoulder" ]
+default = "Left"
+
+[[manifest.config_options]]
+id = "2_button"
+name = "C-Down Button Position"
+description = """
+Where do you want the C-Down Button to be positioned?
+"""
+type = "Enum"
+options = [ "Up", "Left", "Down", "Right", "Shoulder" ]
+default = "Up"
+
+[[manifest.config_options]]
+id = "3_button"
+name = "C-Right Button Position"
+description = """
+Where do you want the C-Right Button to be positioned?
+"""
+type = "Enum"
+options = [ "Up", "Left", "Down", "Right", "Shoulder" ]
+default = "Shoulder"

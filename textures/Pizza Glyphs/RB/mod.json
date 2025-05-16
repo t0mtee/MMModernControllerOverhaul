@@ -1,0 +1,12 @@
+{
+    "authors" : [
+        "pizza1398"
+    ],
+    "description" : "Modern Controller Overhaul texture extension, offering a more game-accurate style of button glyphs for controllers with the RB button.\n\nEnsure you place ABOVE MCO and any other MCO texture extensions you have installed.",
+    "display_name" : "MCO - Pizza RB Glyphs",
+    "game_id" : "mm",
+    "id" : "MCO_PizzaRB",
+    "minimum_recomp_version" : "1.2.0",
+    "short_description" : "Pizza RB Glyph Textures",
+    "version" : "1.0.0"
+}

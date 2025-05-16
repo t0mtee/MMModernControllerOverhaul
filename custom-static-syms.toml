@@ -1,0 +1,10 @@
+[[section]]
+name = "..code"
+rom = 0x00B3C000
+vram = 0x800A5AC0
+size = 0x13E4E0
+
+symbols = [
+    { name = "sAmmoDigitsXPositions", vram = 0x801BFB04 },
+    { name = "sAmmoDigitsYPositions", vram = 0x801BFB0C }
+]

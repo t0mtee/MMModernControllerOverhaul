@@ -1,0 +1,30 @@
+Variables that begin with:
+b are buffer variables - storing information to be used later on.
+c are a text callback.
+t are textures.
+v are mod variables - simply variables used for mod functionality.
+
+Variables that end with an underscore then a letter are due to duplicate symbol names between source files.
+The letter indicates which file they are in.
+
+A prototype to swap characters:
+
+RECOMP_HOOK("Font_LoadCharNES") void Font_LoadCharNES_Init(PlayState* play, u8 codePointIndex, s32 offset) {
+    if (codePointIndex == MESSAGE_BTN_A) {
+        bCodePointIndex = codePointIndex;
+        bOffset = offset;
+    }
+}
+
+RECOMP_HOOK_RETURN("Font_LoadCharNES") void Font_LoadCharNES_Return() {
+    if (bPlayState_message != NULL) {
+        MessageContext* msgCtx = &bPlayState_message->msgCtx;
+        Font* font = &msgCtx->font;
+
+        DmaMgr_RequestSync(&font->charBuf[font->unk_11D88][bOffset],
+                       SEGMENT_ROM_START_OFFSET(nes_font_static, (MESSAGE_BTN_B - ' ') * FONT_CHAR_TEX_SIZE),
+                       FONT_CHAR_TEX_SIZE);
+        
+        bPlayState_message = NULL;
+    }
+}

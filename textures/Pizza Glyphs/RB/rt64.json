@@ -1,0 +1,20 @@
+{
+    "configuration": {
+        "autoPath": "rice",
+        "configurationVersion": 2,
+        "hashVersion": 2
+    },
+    "extraFiles": [
+        "mod.json",
+        "thumb.png"
+    ],
+    "textures": [
+        {
+            "hashes": {
+                "rice": "218cfc10#3#1",
+                "rt64": "4c65d64d236b24c1"
+            },
+            "path": ""
+        }
+	]
+}
