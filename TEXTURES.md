@@ -31,3 +31,13 @@ Community made textures:
 ![DualShock Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/pizza/dualshock.png?raw=true)
 
 Download here: https://thunderstore.io/c/zelda-64-recompiled/p/pizza1398/Pizza_Glyphs/
+
+- Blitz_rgg's DualShock Square-Cross: Blitz has made a pack which aligns itself with the default recomp control scheme:
+
+![Nintendo Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/blitz/start.png?raw=true)
+
+![Xbox Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/blitz/pause.png?raw=true)
+
+![DualShock Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/blitz/equip.png?raw=true)
+
+Download here: https://github.com/Blitz-rgg/MCO-Dualshock-Square-Cross
