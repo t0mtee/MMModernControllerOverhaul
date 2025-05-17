@@ -85,7 +85,7 @@ extern s16 sItemIconTextureScales[4];
 
 // Set here so that config changes have immediate effect.
 RECOMP_CALLBACK("*", recomp_on_play_main) void on_play_main() {
-    if (recomp_get_config_u32("attack_icon_scale")) {
+    if (recomp_get_config_u32("attack_item_scale")) {
         // Make Attack button item icons similar size relative to button.
         sItemIconTextureScales[0] = 0x26C;
     } else {

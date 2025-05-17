@@ -130,8 +130,8 @@ options = [ "Disabled", "ZL", "LT", "L2" ]
 default = "ZL"
 
 [[manifest.config_options]]
-id = "attack_icon_scale"
-name = "Attack Icon Scaling"
+id = "attack_item_scale"
+name = "Attack Item Scaling"
 description = """
 If enabled, the items equipped to the Attack button are scaled down slightly to actually fit the button and align better with the items equipped to other buttons.
 
