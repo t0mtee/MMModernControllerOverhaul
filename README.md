@@ -14,7 +14,7 @@ Modern Controller Overhaul also aims to make the buttons more consistent. Why is
 
 ![Glyph options demonstration](readme/glyphs.gif)
 
-Text relating to the control scheme has been changed too. Instead of referencing some elusive Z Targeting, text can reference ZL, RT, or R2 Targeting, all dependent on your personal configuration.
+Text relating to the control scheme has been changed too. Instead of referencing some elusive Z Targeting, text can reference ZL, LT, or L2 Targeting, all dependent on your personal configuration.
 
 This has been combined with textures, with there being different texture packs available to reflect your controller (Xbox, Playstation, Steam Deck, and L2 + R2 schemes are included in this repo). [Read more here](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/TEXTURES.md). Here's an example of text and texture replacements in action together:
 
