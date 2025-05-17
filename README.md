@@ -21,6 +21,7 @@ This has been combined with textures, with there being different texture packs a
 ![Text and textures demonstration](readme/text(ures).gif)
 
 Bugs and inconsistencies with the original game's UI have been fixed as well:
+- Items equipped to the Attack button can be slightly scaled down to actually fit the button and to be more consistent with items equipped to the C-buttons.
 - The Attack button is no longer disabled when empty, matching the other buttons.
 - Deku Link's empty C-buttons being disabled while other forms aren't has been fixed.
 - The green ammo bug before obtaining the magic meter has been fixed.

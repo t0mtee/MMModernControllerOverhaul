@@ -133,7 +133,7 @@ default = "ZL"
 id = "attack_icon_scale"
 name = "Attack Icon Scaling"
 description = """
-Would you like the items equipped to the Attack button to be scaled down slightly to align better with the icons on the C-buttons?
+If enabled, the items equipped to the Attack button are scaled down slightly to actually fit the button and align better with the items equipped to other buttons.
 
 When not using HD textures, this option can cause issues with the icon rendering. The shadows of some swords will be elongated.
 """ 
