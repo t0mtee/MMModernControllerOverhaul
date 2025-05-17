@@ -2,7 +2,7 @@
 
 __IMPORTANT: If you have issues with the Attack button glyph showing, it is due to a bug with recomp itself where mod priority doesn't affect hook execution order. I know that Arrow Tweaks has this issue when combined with this mod. To fix it, you need to open the Arrow Tweaks (or whichever other mod) nrm file, rename a file in the archive, then rename it back to the original name. This'll be fixed in Z64Recomp 1.2.1.__
 
-__IMPORTANT: All the textures included in this pack are designed for the default control scheme, with the Action button on the right and the Attack button on the left. If you use a different control scheme, you'll have to modify the texture pack manually. It's not hard. Trust me. [Read more here](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/TEXTURES.md).__
+__IMPORTANT: All the textures included in this pack are designed for the default control scheme, with the Action button on the right and the Attack button on the left. If you use a different control scheme, you'll have to modify the texture pack manually. [Read more here](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/TEXTURES.md).__
 
 A Zelda64Recomp mod, built with cross-mod compatibility in mind, that aims to overhaul the HUD and UI surrounding the game's control scheme in order to align it as closely as possible with modern controllers.
 
@@ -16,11 +16,12 @@ Modern Controller Overhaul also aims to make the buttons more consistent. Why is
 
 Text relating to the control scheme has been changed too. Instead of referencing some elusive Z Targeting, text can reference ZL, RT, or R2 Targeting, all dependent on your personal configuration.
 
-This has been combined with textures, with there being different texture packs available to reflect your controller (Xbox, Playstation, Steam Deck, and 8BitDo schemes are included in this download). [Read more here](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/TEXTURES.md). Here's an example of text and texture replacements in action together:
+This has been combined with textures, with there being different texture packs available to reflect your controller (Xbox, Playstation, Steam Deck, and 8BitDo schemes are included in this repo). [Read more here](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/TEXTURES.md). Here's an example of text and texture replacements in action together:
 
 ![Text and textures demonstration](readme/text(ures).gif)
 
 Bugs and inconsistencies with the original game's UI have been fixed as well:
+- The Attack button is no longer disabled when empty, matching the other buttons.
 - Deku Link's empty C-buttons being disabled while other forms aren't has been fixed.
 - The green ammo bug before obtaining the magic meter has been fixed.
 
