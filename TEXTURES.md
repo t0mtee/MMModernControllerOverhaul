@@ -5,7 +5,7 @@ This mod includes textures for Nintendo controllers, and I have made texture pac
 - Steam Deck
 - Controllers with just L2 and R2, like some 8BitDo controllers.
 
-which are all included in this repo.
+which are all included in this repo and the main Thunderstore MCO download.
 
 The message textures in all of these assume that the Attack button is the down button and the Action button is the up button - if you use a different control scheme, you'll have to modify the texture pack yourself.
 1. Download the textures from this repo.
