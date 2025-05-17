@@ -1,0 +1,12 @@
+{
+    "authors" : [
+        "tomtee", "pizza1398", "GhostlyDark", "Nerrel"
+    ],
+    "description" : "Modern Controller Overhaul texture extension, intended for controllers with L2 and R2 triggers but without L1 and R1 shoulders, such as some 8BitDo controllers.\n\nEnsure you place ABOVE Modern Controller Overhaul.\n\nYou should keep Texture Replacement enabled in Modern Controller Overhaul.",
+    "display_name" : "MCO - L2 + R2",
+    "game_id" : "mm",
+    "id" : "MCO_L2_R2",
+    "minimum_recomp_version" : "1.2.0",
+    "short_description" : "L2 + R2 Textures",
+    "version" : "1.0.0"
+}
