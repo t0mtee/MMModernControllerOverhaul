@@ -24,10 +24,10 @@ If you use the textures in this repo as a template, you are required to upload t
 Community made textures:
 - Pizza Glyphs: pizza1398 on Discord has taken the time to make some more art-style consistent empty button glyphs:
 
-[Nintendo Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/pizza/nintendo.png?raw=true)
+![Nintendo Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/pizza/nintendo.png?raw=true)
 
-[Xbox Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/pizza/xbox.png?raw=true)
+![Xbox Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/pizza/xbox.png?raw=true)
 
-[DualShock Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/pizza/dualshock.png?raw=true)
+![DualShock Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/pizza/dualshock.png?raw=true)
 
 Download here: https://thunderstore.io/c/zelda-64-recompiled/p/pizza1398/Pizza_Glyphs/
