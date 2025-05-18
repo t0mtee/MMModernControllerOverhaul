@@ -120,8 +120,8 @@ If enabled, all text references to the old control scheme will be changed to ref
 
 This changes references of Z Targeting to:
 - ZL Targeting for Nintendo controllers.
-- RT Targeting for Xbox controllers or the ROG Ally.
-- R2 Targeting for DualShock / 8BitDo controllers or the Steam Deck.
+- LT Targeting for Xbox controllers or the ROG Ally.
+- L2 Targeting for DualShock / 8BitDo controllers or the Steam Deck.
 
 Have I missed any text? Contact me on Discord (tomtee_) or open an issue on Github.
 """

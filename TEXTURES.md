@@ -32,7 +32,7 @@ Community made textures:
 
 Download here: https://thunderstore.io/c/zelda-64-recompiled/p/pizza1398/Pizza_Glyphs/
 
-- Blitz_rgg's DualShock Square-Cross: Blitz has made a pack which aligns itself with the default recomp control scheme:
+- Blitz_rgg's DualShock Square-Cross: Blitz has made a pack which aligns itself with the default recomp control scheme for DualShock controllers:
 
 ![Nintendo Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/blitz/start.png?raw=true)
 
@@ -41,3 +41,7 @@ Download here: https://thunderstore.io/c/zelda-64-recompiled/p/pizza1398/Pizza_G
 ![DualShock Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/blitz/equip.png?raw=true)
 
 Download here: https://github.com/Blitz-rgg/MCO-Dualshock-Square-Cross
+
+- Gracie's Xbox X to Attack: Gracie has made a pack which aligns itself with the default recomp scheme for Xbox controllers.
+
+Download here: https://thunderstore.io/c/zelda-64-recompiled/p/Gracie/Modern_Controller_Overhaul_Xbox_X_to_Attack/

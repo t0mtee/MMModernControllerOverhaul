@@ -9,7 +9,6 @@ Gfx mSetCombineMode[1];
 Gfx* mSetCombineMode_ptr = mSetCombineMode;
 
 RECOMP_CALLBACK("*", recomp_after_play_init) void after_play_init() {
-
     // Build a dummy DisplayList to compare against to find the vanilla C-Up texrect command. Mimic the original
     // command so it's bytewise identical.
     Gfx* to_compare_ptr = to_compare;
