@@ -22,15 +22,11 @@ I highly encourage people to upload their custom button layout textures!
 If you use the textures in this repo as a template, you are required to upload the edited source textures to your own repo and give credit to me, pizza1398 (if you use the pause menu switcher textures), Nerrel, and GhostlyDark (who made the textures that I used as a base).
 
 Community made textures:
-- Pizza Glyphs: pizza1398 on Discord has taken the time to make some more art-style consistent empty button glyphs:
+- MCO Pizza Variants Jumbo Pack: pizza1398 went sicko mode, creating pre-configured texture packs for many different control configurations, featuring his own art-style consistent empty button glyphs: 
 
-![Nintendo Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/pizza/nintendo.png?raw=true)
+![Jumbo Chart](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/pizza/jumbo_chart.jpg?raw=true)
 
-![Xbox Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/pizza/xbox.png?raw=true)
-
-![DualShock Preview](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/readme/pizza/dualshock.png?raw=true)
-
-Download here: https://thunderstore.io/c/zelda-64-recompiled/p/pizza1398/Pizza_Glyphs/
+Download here: https://thunderstore.io/c/zelda-64-recompiled/p/pizza1398/MCO_Pizza_Variants_Jumbo_Pack/
 
 - Blitz_rgg's DualShock Square-Cross: Blitz has made a pack which aligns itself with the default recomp control scheme for DualShock controllers:
 
