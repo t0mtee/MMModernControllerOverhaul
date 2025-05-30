@@ -2,12 +2,13 @@
     "configuration": {
         "autoPath": "rice",
         "configurationVersion": 2,
-        "hashVersion": 2
+        "hashVersion": 5
     },
     "extraFiles": [
         "mod.json",
         "thumb.png"
     ],
+    "operationFilters": [],
     "textures": [
         {
             "hashes": {
