@@ -25,8 +25,8 @@ RECOMP_HOOK("View_SetViewport") void View_SetViewport_Init(View* view, Viewport*
             case 0: // Up
                 viewport->topY -= 17;
                 viewport->bottomY -= 17;
-                viewport->leftX += 18;
-                viewport->rightX += 18;
+                viewport->leftX += 19;
+                viewport->rightX += 19;
                 break;
             case 1: // Left
                 viewport->topY += 3;
@@ -37,8 +37,8 @@ RECOMP_HOOK("View_SetViewport") void View_SetViewport_Init(View* view, Viewport*
             case 2: // Down
                 viewport->topY += 23;
                 viewport->bottomY += 23;
-                viewport->leftX += 18;
-                viewport->rightX += 18;
+                viewport->leftX += 19;
+                viewport->rightX += 19;
                 break;
             case 3: // Right
                 viewport->topY += 3;
