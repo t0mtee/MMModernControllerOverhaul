@@ -84,17 +84,10 @@ extern s16 sItemIconTextureScales[4];
 
 // Set here so that config changes have immediate effect.
 RECOMP_CALLBACK("*", recomp_on_play_main) void on_play_main() {
-    if (recomp_get_config_u32("attack_item_scale")) {
-        // Make Attack button item icons similar size relative to button.
-        sItemIconTextureScales[0] = 0x26C;
-    } else {
-        sItemIconTextureScales[0] = (s16)(1.074219f * (1 << 10)) >> 1;
-    }
-
     // Calculate the offset that should be applied to the shoulder Y position based on user's config.
     vShoulderOffset = (recomp_get_config_u32("shoulder_position") - 1) * -3;
     int vShoulderEquipOffset = vShoulderOffset * 16;
-
+    
     switch (recomp_get_config_u32("attack_button")) {
         case 0: // Up
             sAmmoDigitsXPositions[0] = 220;         // Ammo Left
@@ -200,32 +193,5 @@ RECOMP_CALLBACK("*", recomp_on_play_main) void on_play_main() {
         case 4: // Shoulder
             C_SHOULDER(2)
             break;
-    }
-}
-
-extern u8 gPlayerFormItemRestrictions[][114];
-u8 bBadIndex;
-
-RECOMP_HOOK("Interface_UpdateButtonsPart2") void Interface_UpdateButtonsPart2_Init(PlayState* play) {
-    // Fix a vanilla bug. gPlayerFormItemRestrictions has 114 allocated positions, however the 255th position is requested
-    // when assessing C-buttons with no items.
-    // This leads to unpredictable behaviour, and Deku Link alone will have greyed out empty C-buttons.
-    // To fix this without causing any potential problems, save the value at the bugged index, replace it to true, then revert it.
-    bBadIndex = gPlayerFormItemRestrictions[PLAYER_FORM_DEKU][255];
-    gPlayerFormItemRestrictions[PLAYER_FORM_DEKU][255] = true;
-
-    // Keep buttons consistent by not disabling the Attack button when its empty.
-    // Using FE as it is unused in the rest of the game.
-    if (BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B) == ITEM_NONE) {
-        BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B) = ITEM_FE;
-    }
-}
-
-RECOMP_HOOK_RETURN("Interface_UpdateButtonsPart2") void Interface_UpdateButtonsPart2_Return() {
-    // Revert prior changes.
-    gPlayerFormItemRestrictions[PLAYER_FORM_DEKU][255] = bBadIndex;
-
-    if (BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B) == ITEM_FE) {
-        BUTTON_ITEM_EQUIP(CUR_FORM, EQUIP_SLOT_B) = ITEM_NONE;
     }
 }

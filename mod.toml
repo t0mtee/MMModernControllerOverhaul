@@ -36,10 +36,7 @@ game_id = "mm"
 minimum_recomp_version = "1.2.0"
 
 # Dependency mods. Each entry is the mod's ID and then an optional minimum version of the dependency mod.
-dependencies = [
-# Example dependency:
-    "MM_EZ_Text_Replacer_API:2.0.0"
-]
+dependencies = [ "mm_recomp_interface_helper" ]
 
 # Native libraries (e.g. DLLs) and the functions they export.
 native_libraries = [
@@ -128,18 +125,6 @@ Have I missed any text? Contact me on Discord (tomtee_) or open an issue on Gith
 type = "Enum"
 options = [ "Disabled", "ZL", "LT", "L2" ]
 default = "ZL"
-
-[[manifest.config_options]]
-id = "attack_item_scale"
-name = "Attack Item Scaling"
-description = """
-If enabled, the items equipped to the Attack button are scaled down slightly to actually fit the button and align better with the items equipped to other buttons.
-
-When not using HD textures, this option can cause issues with the icon rendering. The shadows of some swords will be elongated.
-""" 
-type = "Enum"
-options = [ "Off", "On" ]
-default = "Off"
 
 [[manifest.config_options]]
 id = "shoulder_position"

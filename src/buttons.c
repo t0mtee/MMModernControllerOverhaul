@@ -98,8 +98,6 @@ RECOMP_HOOK("Interface_DrawItemButtons") void Interface_DrawItemButtons_Init(Pla
     SET_CUR_FORM_BTN_ITEM(EQUIP_SLOT_C_RIGHT, ITEM_F0);
 }
 
-Gfx* bGfx = NULL;
-
 RECOMP_HOOK("Gfx_DrawTexRectIA8_DropShadow") void Gfx_DrawTexRectIA8_DropShadow_Init(Gfx* gfx, TexturePtr texture, s16 textureWidth, s16 textureHeight,
     s16 rectLeft, s16 rectTop, s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy, s16 r, s16 g, s16 b, s16 a) {
     // If being run for the Attack button.
@@ -109,20 +107,10 @@ RECOMP_HOOK("Gfx_DrawTexRectIA8_DropShadow") void Gfx_DrawTexRectIA8_DropShadow_
         if (bPauseState != PAUSE_STATE_OFF) {
             (&bPlayState->pauseCtx)->state = PAUSE_STATE_GAMEOVER_0;
         }
-        // Save Gfx for use in fixing bug.
-        bGfx = gfx;
     }
 }
 
-RECOMP_HOOK_RETURN("Gfx_DrawTexRectIA8_DropShadow") void Gfx_DrawTexRectIA8_DropShadow_Return() {
-    // Fixes a vanilla bug that becomes more noticable with this mod due to how it disables the Start button.
-    // The bug causes the ammo count to be green under certain conditions before gaining the magic meter at the start of the game.
-    // This fix ensures that code in the magic meter function that amends this bug is present all the time.
-    if (bGfx != NULL){
-        gDPSetEnvColor(bGfx, 0, 0, 0, 255);
-        bGfx = NULL;
-    }
-}
+Gfx* bGfx = NULL;
 
 RECOMP_HOOK("Gfx_DrawRect_DropShadow") void Gfx_DrawRect_DropShadow_Init(Gfx* gfx, s16 rectLeft, s16 rectTop, s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy, s16 r, s16 g, s16 b, s16 a) {
     // If drawing C-Up button.
