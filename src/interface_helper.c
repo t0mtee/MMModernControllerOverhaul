@@ -1,5 +1,4 @@
 #include "interface_helper.h"
-#include "libc64/sprintf.h"
 
 #define INCBIN(identifier, filename)          \
     asm(".pushsection .rodata\n"              \
