@@ -4,10 +4,11 @@
 RECOMP_IMPORT("*", u32 recomp_get_config_u32(const char* key));
 
 // Only the Action button uses Interface_SetPerspectiveView. Hook into this, save the PlayState.
-extern PlayState* bPlayState;
+PlayState* bPlayState;
 bool vSPVCount = true;
 
 RECOMP_HOOK("Interface_SetPerspectiveView") void Interface_SetPerspectiveView_Init(PlayState* play, s32 topY, s32 bottomY, s32 leftX, s32 rightX) {
+    bPlayState = play;
     // After every second function call with a leftX of 190, we want to draw the Action button glyph.
     if (leftX == 190) {
         vSPVCount = !vSPVCount;
@@ -62,7 +63,7 @@ extern TexturePtr Mod_GlyphTexture(char button[]);
 RECOMP_HOOK_RETURN("Interface_SetPerspectiveView") void Interface_SetPerspectiveView_Return() {
     if (vSPVCount == true) {
         InterfaceContext* interfaceCtx = &bPlayState->interfaceCtx;
-
+        
         if (interfaceCtx->aButtonDoAction == DO_ACTION_NONE && recomp_get_config_u32("glyphs") == 2) {
              OPEN_DISPS(bPlayState->state.gfxCtx);
 
