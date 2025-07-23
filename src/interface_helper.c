@@ -146,7 +146,7 @@ const char BUTTON_CONFIGS[3][9] = {"1_button", "2_button", "3_button"};
 int vShoulderOffset;
 
 // Set here so that config changes have immediate effect.
-RECOMP_CALLBACK("*", recomp_on_play_main) void on_play_main() {
+RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(PlayState* play) {
     // Calculate the offset that should be applied to the shoulder Y position based on user's config.
     vShoulderOffset = (recomp_get_config_u32("shoulder_position") - 1) * -3;
     int vShoulderEquipOffset = vShoulderOffset * 16;
@@ -276,9 +276,7 @@ RECOMP_CALLBACK("*", recomp_on_play_main) void on_play_main() {
             (*pCGlyphPositionsY)[cIndex] = (*pButtonPositionsY)[index];
         }
     }
-}
 
-RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(PlayState* play) {
     // Makes sure the Action button's offset is always zero - it doesn't need to be changed with this mod.
     R_A_BTN_Y_OFFSET = 0;
 
