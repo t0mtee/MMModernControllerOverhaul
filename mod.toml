@@ -162,7 +162,7 @@ options = [ "Up", "Left", "Down", "Right", "Shoulder" ]
 default = "Down"
 
 [[manifest.config_options]]
-id = "1_button"
+id = "c_left_button"
 name = "C-Left Button Position"
 description = """
 Where do you want the C-Left Button to be positioned?
@@ -172,7 +172,7 @@ options = [ "Up", "Left", "Down", "Right", "Shoulder" ]
 default = "Left"
 
 [[manifest.config_options]]
-id = "2_button"
+id = "c_down_button"
 name = "C-Down Button Position"
 description = """
 Where do you want the C-Down Button to be positioned?
@@ -182,7 +182,7 @@ options = [ "Up", "Left", "Down", "Right", "Shoulder" ]
 default = "Up"
 
 [[manifest.config_options]]
-id = "3_button"
+id = "c_right_button"
 name = "C-Right Button Position"
 description = """
 Where do you want the C-Right Button to be positioned?

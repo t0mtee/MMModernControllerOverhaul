@@ -141,7 +141,7 @@ RECOMP_CALLBACK("*", recomp_after_play_init) void after_play_init() {
                             sCButtonPosX[button] = 1140;                                /* Item Equip X */  \
                             sCButtonPosY[button] = 1150 - vShoulderEquipOffset;         /* Item Equip Y */  \
 
-const char BUTTON_CONFIGS[3][9] = {"1_button", "2_button", "3_button"};
+const char BUTTON_CONFIGS[3][14] = {"c_left_button", "c_down_button", "c_right_button"};
 int vShoulderOffset;
 
 // Set here so that config changes have immediate effect.
@@ -203,7 +203,7 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
             break;
     }
 
-    switch (recomp_get_config_u32("1_button")) {
+    switch (recomp_get_config_u32("c_left_button")) {
         case 0: // Up
             C_UP(0)
             break;
@@ -221,7 +221,7 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
             break;
     }
     
-    switch (recomp_get_config_u32("2_button")) {
+    switch (recomp_get_config_u32("c_down_button")) {
         case 0: // Up
             C_UP(1)
             break;
@@ -239,7 +239,7 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
             break;
     }
     
-    switch (recomp_get_config_u32("3_button")) {
+    switch (recomp_get_config_u32("c_right_button")) {
         case 0: // Up
             C_UP(2)
             break;
