@@ -5,14 +5,9 @@ RECOMP_IMPORT("*", u32 recomp_get_config_u32(const char* key));
 
 // Only the Action button uses Interface_SetPerspectiveView. Hook into this, save the PlayState.
 PlayState* bPlayState;
-bool vSPVCount = true;
 
 RECOMP_HOOK("Interface_SetPerspectiveView") void Interface_SetPerspectiveView_Init(PlayState* play, s32 topY, s32 bottomY, s32 leftX, s32 rightX) {
     bPlayState = play;
-    // After every second function call with a leftX of 190, we want to draw the Action button glyph.
-    if (leftX == 190) {
-        vSPVCount = !vSPVCount;
-    }
 }
 
 extern int vShoulderOffset;
@@ -57,25 +52,23 @@ RECOMP_HOOK("View_SetViewport") void View_SetViewport_Init(View* view, Viewport*
     }
 }
 
+extern f32 sAButtonDoActionTexScales[2];
+
 // Draw Action button glyph.
 extern TexturePtr Mod_GlyphTexture(EquipSlot button);
 
-RECOMP_HOOK_RETURN("Interface_SetPerspectiveView") void Interface_SetPerspectiveView_Return() {
-    if (vSPVCount == true) {
-        InterfaceContext* interfaceCtx = &bPlayState->interfaceCtx;
-        
-        if (interfaceCtx->aButtonDoAction == DO_ACTION_NONE && recomp_get_config_u32("glyphs") == 2) {
-             OPEN_DISPS(bPlayState->state.gfxCtx);
+RECOMP_HOOK("Matrix_Translate") void Matrix_Translate_Init(f32 x, f32 y, f32 z, MatrixMode mode) {
+    InterfaceContext* interfaceCtx = &bPlayState->interfaceCtx;
 
-            gSPSetGeometryMode(OVERLAY_DISP++, G_CULL_BACK);
-            gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0, PRIMITIVE,
-                            ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
-            gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 0);
-
+    if (z == sAButtonDoActionTexScales[gSaveContext.options.language] / 10.0f
+        && interfaceCtx->aButtonDoAction == DO_ACTION_NONE && recomp_get_config_u32("glyphs") == 2) {
+            OPEN_DISPS(bPlayState->state.gfxCtx);
+            
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 100, 200, 255, interfaceCtx->aAlpha);
             OVERLAY_DISP = Gfx_DrawTexQuadIA8(OVERLAY_DISP, Mod_GlyphTexture(EQUIP_SLOT_A), 32, 32, 0);
-
+        
+            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->aAlpha);
+            
             CLOSE_DISPS(bPlayState->state.gfxCtx);
-        }
     }
 }
