@@ -95,50 +95,30 @@ RECOMP_CALLBACK("*", recomp_after_play_init) void after_play_init() {
     (*pCUpLabelPositionX) = 965;
 }
 
-#define C_UP(button)    (*pAmmoPositionsTensX)[button + 1] = 220;    /* Ammo Left */     \
-                        (*pAmmoPositionsTensY)[button + 1] = 32;     /* Ammo Down */     \
-                        (*pButtonPositionsX)[button + 1] = 219;      /* Button Left */   \
-                        (*pButtonPositionsY)[button + 1] = 15;       /* Button Down */   \
-                        sMaskCButtonPosX[button] = 550;             /* Mask Equip X */  \
-                        sMaskCButtonPosY[button] = 1150;            /* Mask Equip Y */  \
-                        sCButtonPosX[button] = 550;                 /* Item Equip X */  \
-                        sCButtonPosY[button] = 1150;                /* Item Equip Y */  \
+#define C_UP(button)    (*pButtonPositionsX)[button + 1] = 219;                         /* Button X */   \
+                        (*pButtonPositionsY)[button + 1] = 15;                          /* Button Y */   \
+                        sCButtonPosX[button] = 550;                                     /* Item Equip X */  \
+                        sCButtonPosY[button] = 1150;                                    /* Item Equip Y */  \
 
-#define C_LEFT(button)  (*pAmmoPositionsTensX)[button + 1] = 195;    /* Ammo Left */     \
-                        (*pAmmoPositionsTensY)[button + 1] = 52;     /* Ammo Down */     \
-                        (*pButtonPositionsX)[button + 1] = 194;      /* Button Left */   \
-                        (*pButtonPositionsY)[button + 1] = 35;       /* Button Down */   \
-                        sMaskCButtonPosX[button] = 350;             /* Mask Equip X */  \
-                        sMaskCButtonPosY[button] = 950;             /* Mask Equip Y */  \
-                        sCButtonPosX[button] = 350;                 /* Item Equip X */  \
-                        sCButtonPosY[button] = 950;                 /* Item Equip Y */  \
+#define C_LEFT(button)  (*pButtonPositionsX)[button + 1] = 194;                         /* Button X */   \
+                        (*pButtonPositionsY)[button + 1] = 35;                          /* Button Y */   \
+                        sCButtonPosX[button] = 350;                                     /* Item Equip X */  \
+                        sCButtonPosY[button] = 950;                                     /* Item Equip Y */  \
 
-#define C_DOWN(button)  (*pAmmoPositionsTensX)[button + 1] = 220;    /* Ammo Left */     \
-                        (*pAmmoPositionsTensY)[button + 1] = 72;     /* Ammo Down */     \
-                        (*pButtonPositionsX)[button + 1] = 219;      /* Button Left */   \
-                        (*pButtonPositionsY)[button + 1] = 55;       /* Button Down */   \
-                        sMaskCButtonPosX[button] = 550;             /* Mask Equip X */  \
-                        sMaskCButtonPosY[button] = 700;             /* Mask Equip Y */  \
-                        sCButtonPosX[button] = 550;                 /* Item Equip X */  \
-                        sCButtonPosY[button] = 700;                 /* Item Equip Y */  \
+#define C_DOWN(button)  (*pButtonPositionsX)[button + 1] = 219;                         /* Button X */   \
+                        (*pButtonPositionsY)[button + 1] = 55;                          /* Button Y */   \
+                        sCButtonPosX[button] = 550;                                     /* Item Equip X */  \
+                        sCButtonPosY[button] = 700;                                     /* Item Equip Y */  \
 
-#define C_RIGHT(button) (*pAmmoPositionsTensX)[button + 1] = 247;    /* Ammo Left */     \
-                        (*pAmmoPositionsTensY)[button + 1] = 52;     /* Ammo Down */     \
-                        (*pButtonPositionsX)[button + 1] = 246;      /* Button Left */   \
-                        (*pButtonPositionsY)[button + 1] = 35;       /* Button Down */   \
-                        sMaskCButtonPosX[button] = 815;             /* Mask Equip X */  \
-                        sMaskCButtonPosY[button] = 950;             /* Mask Equip Y */  \
-                        sCButtonPosX[button] = 815;                 /* Item Equip X */  \
-                        sCButtonPosY[button] = 950;                 /* Item Equip Y */  \
+#define C_RIGHT(button) (*pButtonPositionsX)[button + 1] = 246;                         /* Button X */   \
+                        (*pButtonPositionsY)[button + 1] = 35;                          /* Button Y */   \
+                        sCButtonPosX[button] = 815;                                     /* Item Equip X */  \
+                        sCButtonPosY[button] = 950;                                     /* Item Equip Y */  \
 
-#define C_SHOULDER(button)  (*pAmmoPositionsTensX)[button + 1] = 272;                    /* Ammo Left */     \
-                            (*pAmmoPositionsTensY)[button + 1] = 32 + vShoulderOffset;   /* Ammo Down */     \
-                            (*pButtonPositionsX)[button + 1] = 271;                      /* Button Left */   \
-                            (*pButtonPositionsY)[button + 1] = 15 + vShoulderOffset;     /* Button Down */   \
-                            sMaskCButtonPosX[button] = 1140;                            /* Mask Equip X */  \
-                            sMaskCButtonPosY[button] = 1150 - vShoulderEquipOffset;     /* Mask Equip Y */  \
+#define C_SHOULDER(button)  (*pButtonPositionsX)[button + 1] = 271;                     /* Button X */   \
+                            (*pButtonPositionsY)[button + 1] = 15 + vShoulderOffset;    /* Button Y */   \
                             sCButtonPosX[button] = 1140;                                /* Item Equip X */  \
-                            sCButtonPosY[button] = 1150 - vShoulderEquipOffset;         /* Item Equip Y */  \
+                            sCButtonPosY[button] = 1150 - (vShoulderOffset * 16);       /* Item Equip Y */  \
 
 int vShoulderOffset;
 
@@ -146,127 +126,65 @@ int vShoulderOffset;
 RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(PlayState* play) {
     // Calculate the offset that should be applied to the shoulder Y position based on user's config.
     vShoulderOffset = (recomp_get_config_u32("shoulder_position") - 1) * -3;
-    int vShoulderEquipOffset = vShoulderOffset * 16;
     
     switch (recomp_get_config_u32("attack_button")) {
         case 0: // Up
-            (*pAmmoPositionsTensX)[0] = 220;         // Ammo Left
-            (*pAmmoPositionsTensY)[0] = 33;          // Ammo Down
-            sBButtonDoActionXPositions[0] = 209;    // Action JPN X
-            sBButtonDoActionXPositions[1] = 206;    // Action ENG X
-            sBButtonDoActionYPositions[0] = 20;     // Action JPN Y
-            sBButtonDoActionYPositions[1] = 19;     // Action ENG Y
-            (*pButtonPositionsX)[0] = 218;           // Button Left
-            (*pButtonPositionsY)[0] = 14;            // Button Down
+            (*pButtonPositionsX)[0] = 218;                  // Button X
+            (*pButtonPositionsY)[0] = 14;                   // Button Y
             break;
         case 1: // Left
-            (*pAmmoPositionsTensX)[0] = 195;         // Ammo Left
-            (*pAmmoPositionsTensY)[0] = 53;          // Ammo Down
-            sBButtonDoActionXPositions[0] = 184;    // Action JPN X
-            sBButtonDoActionXPositions[1] = 181;    // Action ENG X
-            sBButtonDoActionYPositions[0] = 40;     // Action JPN Y
-            sBButtonDoActionYPositions[1] = 39;     // Action ENG Y
-            (*pButtonPositionsX)[0] = 193;           // Button Left
-            (*pButtonPositionsY)[0] = 34;            // Button Down
+            (*pButtonPositionsX)[0] = 193;                  // Button X
+            (*pButtonPositionsY)[0] = 34;                   // Button Y
             break;
         case 2: // Down
-            (*pAmmoPositionsTensX)[0] = 220;         // Ammo Left
-            (*pAmmoPositionsTensY)[0] = 73;          // Ammo Down
-            sBButtonDoActionXPositions[0] = 209;    // Action JPN X
-            sBButtonDoActionXPositions[1] = 206;    // Action ENG X
-            sBButtonDoActionYPositions[0] = 60;     // Action JPN Y
-            sBButtonDoActionYPositions[1] = 59;     // Action ENG Y
-            (*pButtonPositionsX)[0] = 218;           // Button Left
-            (*pButtonPositionsY)[0] = 54;            // Button Down
+            (*pButtonPositionsX)[0] = 218;                  // Button X
+            (*pButtonPositionsY)[0] = 54;                   // Button Y
             break;
         case 3: // Right
-            (*pAmmoPositionsTensX)[0] = 245;         // Ammo Left
-            (*pAmmoPositionsTensY)[0] = 53;          // Ammo Down
-            sBButtonDoActionXPositions[0] = 236;    // Action JPN X
-            sBButtonDoActionXPositions[1] = 233;    // Action ENG X
-            sBButtonDoActionYPositions[0] = 40;     // Action JPN Y
-            sBButtonDoActionYPositions[1] = 39;     // Action ENG Y
-            (*pButtonPositionsX)[0] = 245;           // Button Left
-            (*pButtonPositionsY)[0] = 34;            // Button Down
+            (*pButtonPositionsX)[0] = 245;                  // Button X
+            (*pButtonPositionsY)[0] = 34;                   // Button Y
             break;
         case 4: // Shoulder
-            (*pAmmoPositionsTensX)[0] = 272;                         // Ammo Left
-            (*pAmmoPositionsTensY)[0] = 33 + vShoulderOffset;        // Ammo Down
-            sBButtonDoActionXPositions[0] = 261;                    // Action JPN X
-            sBButtonDoActionXPositions[1] = 258;                    // Action ENG X
-            sBButtonDoActionYPositions[0] = 20 + vShoulderOffset;   // Action JPN Y
-            sBButtonDoActionYPositions[1] = 19 + vShoulderOffset;   // Action ENG Y
-            (*pButtonPositionsX)[0] = 270;                           // Button Left
-            (*pButtonPositionsY)[0] = 14 + vShoulderOffset;          // Button Down
-            break;
-    }
-
-    switch (recomp_get_config_u32("c_left_button")) {
-        case 0: // Up
-            C_UP(0)
-            break;
-        case 1: // Left
-            C_LEFT(0)
-            break;
-        case 2: // Down
-            C_DOWN(0)
-            break;
-        case 3: // Right
-            C_RIGHT(0)
-            break;
-        case 4: // Shoulder
-            C_SHOULDER(0)
+            (*pButtonPositionsX)[0] = 270;                  // Button X
+            (*pButtonPositionsY)[0] = 14 + vShoulderOffset; // Button Y
             break;
     }
     
-    switch (recomp_get_config_u32("c_down_button")) {
-        case 0: // Up
-            C_UP(1)
-            break;
-        case 1: // Left
-            C_LEFT(1)
-            break;
-        case 2: // Down
-            C_DOWN(1)
-            break;
-        case 3: // Right
-            C_RIGHT(1)
-            break;
-        case 4: // Shoulder
-            C_SHOULDER(1)
-            break;
-    }
+    // Set Attack ammo drawing positions to same place relative to button position
+    (*pAmmoPositionsTensX)[0] = (*pButtonPositionsX)[0] + 2;
+    (*pAmmoPositionsTensY)[0] = (*pButtonPositionsY)[0] + 19;
     
-    switch (recomp_get_config_u32("c_right_button")) {
-        case 0: // Up
-            C_UP(2)
-            break;
-        case 1: // Left
-            C_LEFT(2)
-            break;
-        case 2: // Down
-            C_DOWN(2)
-            break;
-        case 3: // Right
-            C_RIGHT(2)
-            break;
-        case 4: // Shoulder
-            C_SHOULDER(2)
-            break;
-    }
-
+    // Set Attack button action prompts to same place relative to button position
+    // Japanese
+    sBButtonDoActionXPositions[0] = (*pButtonPositionsX)[0] - 9;
+    sBButtonDoActionYPositions[0] = (*pButtonPositionsY)[0] + 6;
+    // English
+    sBButtonDoActionXPositions[1] = (*pButtonPositionsX)[0] - 12;
+    sBButtonDoActionYPositions[1] = (*pButtonPositionsY)[0] + 5;
+    
     for (int index = EQUIP_SLOT_B; index <= EQUIP_SLOT_C_RIGHT; index++ ) {
-        // Set ammo one positions to be next to ammo tens
-        (*pAmmoPositionsOnesX)[index] = (*pAmmoPositionsTensX)[index] + 6;
-        (*pAmmoPositionsOnesY)[index] = (*pAmmoPositionsTensY)[index];
-        
-        // Set item icon drawing positions to the same positions as the buttons
-        (*pItemIconPositionsX)[index] = (*pButtonPositionsX)[index] << 2;
-        (*pItemIconPositionsY)[index] = (*pButtonPositionsY)[index] << 2;
-        
         // C-button only shenanigans
         if (index != EQUIP_SLOT_B) {
             int cIndex = index - 1;
+            
+            // Move C-buttons as per config
+            switch (recomp_get_config_u32(BUTTON_CONFIGS[index])) {
+                case 0: // Up
+                    C_UP(cIndex)
+                    break;
+                case 1: // Left
+                    C_LEFT(cIndex)
+                    break;
+                case 2: // Down
+                    C_DOWN(cIndex)
+                    break;
+                case 3: // Right
+                    C_RIGHT(cIndex)
+                    break;
+                case 4: // Shoulder
+                    C_SHOULDER(cIndex)
+                    break;
+            }
             
             // Disable C glyph code being run at all to avoid callbacks being erroneously ran
             if (recomp_get_config_u32("glyphs") == 0) {
@@ -275,10 +193,27 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
                 (*pCGlyphsEnabled)[cIndex] = true;
                 (*pCGlyphTextures)[cIndex] = Mod_GlyphTexture(index);
             }
-            
+
+            // Set glyph drawing positions to same place as button drawing positions
             (*pCGlyphPositionsX)[cIndex] = (*pButtonPositionsX)[index];
             (*pCGlyphPositionsY)[cIndex] = (*pButtonPositionsY)[index];
+            
+            // Set ammo positions to same place relative to button positions
+            (*pAmmoPositionsTensX)[index] = (*pButtonPositionsX)[index] + 1;
+            (*pAmmoPositionsTensY)[index] = (*pButtonPositionsY)[index] + 17;
+            
+            // Set mask equip destination to same place as item equip destination
+            sMaskCButtonPosX[cIndex] = sCButtonPosX[cIndex];
+            sMaskCButtonPosY[cIndex] = sCButtonPosY[cIndex];
         }
+
+        // Set ammo one positions to be next to ammo tens
+        (*pAmmoPositionsOnesX)[index] = (*pAmmoPositionsTensX)[index] + 6;
+        (*pAmmoPositionsOnesY)[index] = (*pAmmoPositionsTensY)[index];
+        
+        // Set item icon drawing positions to the same positions as the buttons
+        (*pItemIconPositionsX)[index] = (*pButtonPositionsX)[index] << 2;
+        (*pItemIconPositionsY)[index] = (*pButtonPositionsY)[index] << 2;
     }
 
     // Makes sure the Action button's offset is always zero - it doesn't need to be changed with this mod.
