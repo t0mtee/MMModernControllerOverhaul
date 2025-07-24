@@ -18,7 +18,7 @@ This has been combined with textures, with there being different texture packs a
 
 ![Text and textures demonstration](readme/text(ures).gif)
 
-Requires [Interface Helper](), and optionally [EZ Text Replacer API](https://thunderstore.io/c/zelda-64-recompiled/p/LT_Schmiddy/EZ_Text_Replacer_API/) for text changes.
+Requires [Interface Helper](https://thunderstore.io/c/zelda-64-recompiled/p/tomtee/Interface_Helper/), and optionally [EZ Text Replacer API](https://thunderstore.io/c/zelda-64-recompiled/p/LT_Schmiddy/EZ_Text_Replacer_API/) for text changes.
 
 Credits:
 - Wiseguy helped me out with moving the C-Up button - couldn't have done it without you and your... wisdom.
