@@ -41,7 +41,7 @@ dependencies = [ "mm_recomp_interface_helper" ]
 # Optional dependency mods. This has the same format as `dependencies`, but the game will still start if dependencies in this
 # list aren't present. You can query the presence of a given dependency by using `recomp_is_dependency_met` in recomputils.h.
 # Calling a function imported from an optional dependency that isn't present will trigger an error.
-optional_dependencies = [ "MM_EZ_Text_Replacer_API:2.0.0" ]
+optional_dependencies = [ "MM_EZ_Text_Replacer_API:2.3.0" ]
 
 # Native libraries (e.g. DLLs) and the functions they export.
 native_libraries = [
