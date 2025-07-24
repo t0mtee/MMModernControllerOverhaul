@@ -58,7 +58,7 @@ RECOMP_HOOK("View_SetViewport") void View_SetViewport_Init(View* view, Viewport*
 }
 
 // Draw Action button glyph.
-extern TexturePtr Mod_GlyphTexture(char button[]);
+extern TexturePtr Mod_GlyphTexture(EquipSlot button);
 
 RECOMP_HOOK_RETURN("Interface_SetPerspectiveView") void Interface_SetPerspectiveView_Return() {
     if (vSPVCount == true) {
@@ -73,7 +73,7 @@ RECOMP_HOOK_RETURN("Interface_SetPerspectiveView") void Interface_SetPerspective
             gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 0);
 
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 100, 200, 255, interfaceCtx->aAlpha);
-            OVERLAY_DISP = Gfx_DrawTexQuadIA8(OVERLAY_DISP, Mod_GlyphTexture("action_button"), 32, 32, 0);
+            OVERLAY_DISP = Gfx_DrawTexQuadIA8(OVERLAY_DISP, Mod_GlyphTexture(EQUIP_SLOT_A), 32, 32, 0);
 
             CLOSE_DISPS(bPlayState->state.gfxCtx);
         }

@@ -20,30 +20,27 @@ extern TexturePtr gButtonBackgroundTex[];
 INCBIN(tBGlyph, "./textures/ia8/b_empty_icon.ia8.bin");
 INCBIN(tAGlyph, "./textures/ia8/a_empty_icon.ia8.bin");
 
-TexturePtr Mod_GlyphTexture(const char button[]) {
-    s32 config = recomp_get_config_u32(button);
-    
-    // If glyphs aren't fully disabled.
-    if (recomp_get_config_u32("glyphs") != 0) {
-        switch (config) {
-            case 0: // Up
-                return (u8*)gButtonBackgroundTex + ((32 * 32) * (EQUIP_SLOT_C_DOWN + 1));
-                break;
-            case 1: // Left
-                return (u8*)gButtonBackgroundTex + ((32 * 32) * (EQUIP_SLOT_C_LEFT + 1));
-                break;
-            case 2: // Down
-                return tBGlyph;
-                break;
-            case 3: // Right
-                return tAGlyph;
-                break;
-            case 4: // Shoulder
-                return (u8*)gButtonBackgroundTex + ((32 * 32) * (EQUIP_SLOT_C_RIGHT + 1));
-                break;
-        }
+const char BUTTON_CONFIGS[5][15] = {"attack_button", "c_left_button", "c_down_button", "c_right_button", "action_button"};
+
+TexturePtr Mod_GlyphTexture(EquipSlot button) {
+    switch (recomp_get_config_u32(BUTTON_CONFIGS[button])) {
+        case 0: // Up
+            return (u8*)gButtonBackgroundTex + ((32 * 32) * (EQUIP_SLOT_C_DOWN + 1));
+            break;
+        case 1: // Left
+            return (u8*)gButtonBackgroundTex + ((32 * 32) * (EQUIP_SLOT_C_LEFT + 1));
+            break;
+        case 2: // Down
+            return tBGlyph;
+            break;
+        case 3: // Right
+            return tAGlyph;
+            break;
+        case 4: // Shoulder
+            return (u8*)gButtonBackgroundTex + ((32 * 32) * (EQUIP_SLOT_C_RIGHT + 1));
+            break;
     }
-    
+
     return NULL;
 }
 
@@ -60,6 +57,7 @@ AMMO_POSITIONS_ONES_X_DECLARE
 AMMO_POSITIONS_ONES_Y_DECLARE
 BUTTON_POSITIONS_X_DECLARE
 BUTTON_POSITIONS_Y_DECLARE
+C_GLYPHS_ENABLED_DECLARE
 C_GLYPH_TEXTURES_DECLARE
 C_GLYPH_POSITIONS_X_DECLARE
 C_GLYPH_POSITIONS_Y_DECLARE
@@ -78,6 +76,7 @@ RECOMP_CALLBACK("*", recomp_after_play_init) void after_play_init() {
     AMMO_POSITIONS_ONES_Y_REGISTER
     BUTTON_POSITIONS_X_REGISTER
     BUTTON_POSITIONS_Y_REGISTER
+    C_GLYPHS_ENABLED_REGISTER
     C_GLYPH_TEXTURES_REGISTER
     C_GLYPH_POSITIONS_X_REGISTER
     C_GLYPH_POSITIONS_Y_REGISTER
@@ -141,7 +140,6 @@ RECOMP_CALLBACK("*", recomp_after_play_init) void after_play_init() {
                             sCButtonPosX[button] = 1140;                                /* Item Equip X */  \
                             sCButtonPosY[button] = 1150 - vShoulderEquipOffset;         /* Item Equip Y */  \
 
-const char BUTTON_CONFIGS[3][14] = {"c_left_button", "c_down_button", "c_right_button"};
 int vShoulderOffset;
 
 // Set here so that config changes have immediate effect.
@@ -257,19 +255,26 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
             break;
     }
 
-    for (int index = 0; index <= 3; index++ ) {
+    for (int index = EQUIP_SLOT_B; index <= EQUIP_SLOT_C_RIGHT; index++ ) {
         // Set ammo one positions to be next to ammo tens
         (*pAmmoPositionsOnesX)[index] = (*pAmmoPositionsTensX)[index] + 6;
         (*pAmmoPositionsOnesY)[index] = (*pAmmoPositionsTensY)[index];
         
+        // Set item icon drawing positions to the same positions as the buttons
         (*pItemIconPositionsX)[index] = (*pButtonPositionsX)[index] << 2;
         (*pItemIconPositionsY)[index] = (*pButtonPositionsY)[index] << 2;
         
         // C-button only shenanigans
-        if (index != 0) {
+        if (index != EQUIP_SLOT_B) {
             int cIndex = index - 1;
             
-            (*pCGlyphTextures)[cIndex] = Mod_GlyphTexture(BUTTON_CONFIGS[cIndex]);
+            // Disable C glyph code being run at all to avoid callbacks being erroneously ran
+            if (recomp_get_config_u32("glyphs") == 0) {
+                (*pCGlyphsEnabled)[cIndex] = false;
+            } else {
+                (*pCGlyphsEnabled)[cIndex] = true;
+                (*pCGlyphTextures)[cIndex] = Mod_GlyphTexture(index);
+            }
             
             (*pCGlyphPositionsX)[cIndex] = (*pButtonPositionsX)[index];
             (*pCGlyphPositionsY)[cIndex] = (*pButtonPositionsY)[index];
@@ -278,14 +283,14 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
 
     // Makes sure the Action button's offset is always zero - it doesn't need to be changed with this mod.
     R_A_BTN_Y_OFFSET = 0;
-
+    
     if (*pBButtonDrawn == false && recomp_get_config_u32("glyphs") == 2) {
         OPEN_DISPS(play->state.gfxCtx);
         
         // Draw Attack button glyph.
         gDPPipeSync(OVERLAY_DISP++);
         gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 100, 255, 120, (&play->interfaceCtx)->bAlpha);
-        OVERLAY_DISP = Gfx_DrawTexRectIA8(OVERLAY_DISP, Mod_GlyphTexture("attack_button"),
+        OVERLAY_DISP = Gfx_DrawTexRectIA8(OVERLAY_DISP, Mod_GlyphTexture(EQUIP_SLOT_B),
             0x20, 0x20, (*pButtonPositionsX)[0], (*pButtonPositionsY)[0], 0x1D,
             0x1D, ((s32)(1.1230469f * (1 << 10)) >> 1) * 2, ((s32)(1.1230469f * (1 << 10)) >> 1) * 2);
 
