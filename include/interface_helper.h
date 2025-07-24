@@ -4,6 +4,141 @@
 #include "modding.h"
 #include "global.h"
 
+#define AMMO_FORCE_MAX_COLOUR_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoForceMaxColour_Register(bool (**pointer))); \
+bool (*pAmmoForceMaxColour);
+
+#define AMMO_FORCE_MAX_COLOUR_REGISTER AmmoForceMaxColour_Register(&pAmmoForceMaxColour);
+
+#define AMMO_FULL_COLOUR_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoFullColour_Register(int (**pointer)[3])); \
+int (*pAmmoFullColour)[3];
+
+#define AMMO_FULL_COLOUR_REGISTER AmmoFullColour_Register(&pAmmoFullColour);
+
+#define AMMO_EMPTY_COLOUR_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoEmptyColour_Register(int (**pointer)[3])); \
+int (*pAmmoEmptyColour)[3];
+
+#define AMMO_EMPTY_COLOUR_REGISTER AmmoEmptyColour_Register(&pAmmoEmptyColour);
+
+#define AMMO_TEXTURE_TENS_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoTextureTens_Register(TexturePtr (**pointer))); \
+TexturePtr (*pAmmoTextureTens);
+
+#define AMMO_TEXTURE_TENS_REGISTER AmmoTextureTens_Register(&pAmmoTextureTens);
+
+#define AMMO_TEXTURE_WIDTH_TENS_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoTextureWidthTens_Register(s16 (**pointer))); \
+s16 (*pAmmoTextureWidthTens);
+
+#define AMMO_TEXTURE_WIDTH_TENS_REGISTER AmmoTextureWidthTens_Register(&pAmmoTextureWidthTens);
+
+#define AMMO_TEXTURE_HEIGHT_TENS_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoTextureHeightTens_Register(s16 (**pointer))); \
+s16 (*pAmmoTextureHeightTens);
+
+#define AMMO_TEXTURE_HEIGHT_TENS_REGISTER AmmoTextureHeightTens_Register(&pAmmoTextureHeightTens);
+
+#define AMMO_POSITIONS_TENS_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoPositionsTensX_Register(s16 (**pointer)[4])); \
+s16 (*pAmmoPositionsTensX)[4];
+
+#define AMMO_POSITIONS_TENS_X_REGISTER AmmoPositionsTensX_Register(&pAmmoPositionsTensX);
+
+#define AMMO_POSITIONS_TENS_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoPositionsTensY_Register(s16 (**pointer)[4])); \
+s16 (*pAmmoPositionsTensY)[4];
+
+#define AMMO_POSITIONS_TENS_Y_REGISTER AmmoPositionsTensY_Register(&pAmmoPositionsTensY);
+
+#define AMMO_RECT_SIZE_TENS_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoRectSizeTensX_Register(s16 (**pointer)[4])); \
+s16 (*pAmmoRectSizeTensX)[4];
+
+#define AMMO_RECT_SIZE_TENS_X_REGISTER AmmoRectSizeTensX_Register(&pAmmoRectSizeTensX);
+
+#define AMMO_RECT_SIZE_TENS_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoRectSizeTensY_Register(s16 (**pointer)[4])); \
+s16 (*pAmmoRectSizeTensY)[4];
+
+#define AMMO_RECT_SIZE_TENS_Y_REGISTER AmmoRectSizeTensY_Register(&pAmmoRectSizeTensY);
+
+#define AMMO_UPPER_SCALE_TENS_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoUpperScaleTensX_Register(u16 (**pointer))); \
+u16 (*pAmmoUpperScaleTensX);
+
+#define AMMO_UPPER_SCALE_TENS_X_REGISTER AmmoUpperScaleTensX_Register(&pAmmoUpperScaleTensX);
+
+#define AMMO_UPPER_SCALE_TENS_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoUpperScaleTensY_Register(u16 (**pointer))); \
+u16 (*pAmmoUpperScaleTensY);
+
+#define AMMO_UPPER_SCALE_TENS_Y_REGISTER AmmoUpperScaleTensY_Register(&pAmmoUpperScaleTensY);
+
+#define AMMO_LOWER_SCALE_TENS_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoLowerScaleTensX_Register(u16 (**pointer))); \
+u16 (*pAmmoLowerScaleTensX);
+
+#define AMMO_LOWER_SCALE_TENS_X_REGISTER AmmoLowerScaleTensX_Register(&pAmmoLowerScaleTensX);
+
+#define AMMO_LOWER_SCALE_TENS_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoLowerScaleTensY_Register(u16 (**pointer))); \
+u16 (*pAmmoLowerScaleTensY);
+
+#define AMMO_LOWER_SCALE_TENS_Y_REGISTER AmmoLowerScaleTensY_Register(&pAmmoLowerScaleTensY);
+
+#define AMMO_TEXTURE_ONES_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoTextureOnes_Register(TexturePtr (**pointer))); \
+TexturePtr (*pAmmoTextureOnes);
+
+#define AMMO_TEXTURE_ONES_REGISTER AmmoTextureOnes_Register(&pAmmoTextureOnes);
+
+#define AMMO_TEXTURE_WIDTH_ONES_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoTextureWidthOnes_Register(s16 (**pointer))); \
+s16 (*pAmmoTextureWidthOnes);
+
+#define AMMO_TEXTURE_WIDTH_ONES_REGISTER AmmoTextureWidthOnes_Register(&pAmmoTextureWidthOnes);
+
+#define AMMO_TEXTURE_HEIGHT_ONES_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoTextureHeightOnes_Register(s16 (**pointer))); \
+s16 (*pAmmoTextureHeightOnes);
+
+#define AMMO_TEXTURE_HEIGHT_ONES_REGISTER AmmoTextureHeightOnes_Register(&pAmmoTextureHeightOnes);
+
+#define AMMO_POSITIONS_ONES_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoPositionsOnesX_Register(s16 (**pointer)[4])); \
+s16 (*pAmmoPositionsOnesX)[4];
+
+#define AMMO_POSITIONS_ONES_X_REGISTER AmmoPositionsOnesX_Register(&pAmmoPositionsOnesX);
+
+#define AMMO_POSITIONS_ONES_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoPositionsOnesY_Register(s16 (**pointer)[4])); \
+s16 (*pAmmoPositionsOnesY)[4];
+
+#define AMMO_POSITIONS_ONES_Y_REGISTER AmmoPositionsOnesY_Register(&pAmmoPositionsOnesY);
+
+#define AMMO_RECT_SIZE_ONES_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoRectSizeOnesX_Register(s16 (**pointer)[4])); \
+s16 (*pAmmoRectSizeOnesX)[4];
+
+#define AMMO_RECT_SIZE_ONES_X_REGISTER AmmoRectSizeOnesX_Register(&pAmmoRectSizeOnesX);
+
+#define AMMO_RECT_SIZE_ONES_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoRectSizeOnesY_Register(s16 (**pointer)[4])); \
+s16 (*pAmmoRectSizeOnesY)[4];
+
+#define AMMO_RECT_SIZE_ONES_Y_REGISTER AmmoRectSizeOnesY_Register(&pAmmoRectSizeOnesY);
+
+#define AMMO_UPPER_SCALE_ONES_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoUpperScaleOnesX_Register(u16 (**pointer))); \
+u16 (*pAmmoUpperScaleOnesX);
+
+#define AMMO_UPPER_SCALE_ONES_X_REGISTER AmmoUpperScaleOnesX_Register(&pAmmoUpperScaleOnesX);
+
+#define AMMO_UPPER_SCALE_ONES_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoUpperScaleOnesY_Register(u16 (**pointer))); \
+u16 (*pAmmoUpperScaleOnesY);
+
+#define AMMO_UPPER_SCALE_ONES_Y_REGISTER AmmoUpperScaleOnesY_Register(&pAmmoUpperScaleOnesY);
+
+#define AMMO_LOWER_SCALE_ONES_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoLowerScaleOnesX_Register(u16 (**pointer))); \
+u16 (*pAmmoLowerScaleOnesX);
+
+#define AMMO_LOWER_SCALE_ONES_X_REGISTER AmmoLowerScaleOnesX_Register(&pAmmoLowerScaleOnesX);
+
+#define AMMO_LOWER_SCALE_ONES_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoLowerScaleOnesY_Register(u16 (**pointer))); \
+u16 (*pAmmoLowerScaleOnesY);
+
+#define AMMO_LOWER_SCALE_ONES_Y_REGISTER AmmoLowerScaleOnesY_Register(&pAmmoLowerScaleOnesY);
+
+#define B_BUTTON_DRAWN_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void BButtonDrawn_Register(bool (**pointer))); \
+bool (*pBButtonDrawn);
+
+#define B_BUTTON_DRAWN_REGISTER BButtonDrawn_Register(&pBButtonDrawn);
+
+#define B_BUTTON_ENABLED_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void BButtonEnabled_Register(bool (**pointer)[8])); \
+bool (*pBButtonEnabled)[8];
+
+#define B_BUTTON_ENABLED_REGISTER BButtonEnabled_Register(&pBButtonEnabled);
+
 #define BUTTONS_ENABLED_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void ButtonsEnabled_Register(bool (**pointer)[4])); \
 bool (*pButtonsEnabled)[4];
 
@@ -358,151 +493,6 @@ s16 (*pCGlyphScalesY)[3];
 s16 (*pCGlyphColours)[3][3];
 
 #define C_GLYPH_COLOURS_REGISTER CGlyphColours_Register(&pCGlyphColours);
-
-#define B_BUTTON_DRAWN_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void BButtonDrawn_Register(bool (**pointer))); \
-bool (*pBButtonDrawn);
-
-#define B_BUTTON_DRAWN_REGISTER BButtonDrawn_Register(&pBButtonDrawn);
-
-#define B_BUTTON_ENABLED_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void BButtonEnabled_Register(bool (**pointer)[8])); \
-bool (*pBButtonEnabled)[8];
-
-#define B_BUTTON_ENABLED_REGISTER BButtonEnabled_Register(&pBButtonEnabled);
-
-#define AMMO_PRIM_COLOUR_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoPrimColour_Register(int (**pointer)[3])); \
-int (*pAmmoPrimColour)[3];
-
-#define AMMO_PRIM_COLOUR_REGISTER AmmoPrimColour_Register(&pAmmoPrimColour);
-
-#define AMMO_ENV_COLOUR_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoEnvColour_Register(int (**pointer)[4])); \
-int (*pAmmoEnvColour)[4];
-
-#define AMMO_ENV_COLOUR_REGISTER AmmoEnvColour_Register(&pAmmoEnvColour);
-
-#define AMMO_FORCE_MAX_COLOUR_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoForceMaxColour_Register(bool (**pointer))); \
-bool (*pAmmoForceMaxColour);
-
-#define AMMO_FORCE_MAX_COLOUR_REGISTER AmmoForceMaxColour_Register(&pAmmoForceMaxColour);
-
-#define AMMO_FULL_COLOUR_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoFullColour_Register(int (**pointer)[3])); \
-int (*pAmmoFullColour)[3];
-
-#define AMMO_FULL_COLOUR_REGISTER AmmoFullColour_Register(&pAmmoFullColour);
-
-#define AMMO_EMPTY_COLOUR_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoEmptyColour_Register(int (**pointer)[3])); \
-int (*pAmmoEmptyColour)[3];
-
-#define AMMO_EMPTY_COLOUR_REGISTER AmmoEmptyColour_Register(&pAmmoEmptyColour);
-
-#define AMMO_TEXTURE_TENS_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoTextureTens_Register(TexturePtr (**pointer))); \
-TexturePtr (*pAmmoTextureTens);
-
-#define AMMO_TEXTURE_TENS_REGISTER AmmoTextureTens_Register(&pAmmoTextureTens);
-
-#define AMMO_TEXTURE_WIDTH_TENS_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoTextureWidthTens_Register(s16 (**pointer))); \
-s16 (*pAmmoTextureWidthTens);
-
-#define AMMO_TEXTURE_WIDTH_TENS_REGISTER AmmoTextureWidthTens_Register(&pAmmoTextureWidthTens);
-
-#define AMMO_TEXTURE_HEIGHT_TENS_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoTextureHeightTens_Register(s16 (**pointer))); \
-s16 (*pAmmoTextureHeightTens);
-
-#define AMMO_TEXTURE_HEIGHT_TENS_REGISTER AmmoTextureHeightTens_Register(&pAmmoTextureHeightTens);
-
-#define AMMO_POSITIONS_TENS_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoPositionsTensX_Register(s16 (**pointer)[4])); \
-s16 (*pAmmoPositionsTensX)[4];
-
-#define AMMO_POSITIONS_TENS_X_REGISTER AmmoPositionsTensX_Register(&pAmmoPositionsTensX);
-
-#define AMMO_POSITIONS_TENS_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoPositionsTensY_Register(s16 (**pointer)[4])); \
-s16 (*pAmmoPositionsTensY)[4];
-
-#define AMMO_POSITIONS_TENS_Y_REGISTER AmmoPositionsTensY_Register(&pAmmoPositionsTensY);
-
-#define AMMO_RECT_SIZE_TENS_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoRectSizeTensX_Register(s16 (**pointer)[4])); \
-s16 (*pAmmoRectSizeTensX)[4];
-
-#define AMMO_RECT_SIZE_TENS_X_REGISTER AmmoRectSizeTensX_Register(&pAmmoRectSizeTensX);
-
-#define AMMO_RECT_SIZE_TENS_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoRectSizeTensY_Register(s16 (**pointer)[4])); \
-s16 (*pAmmoRectSizeTensY)[4];
-
-#define AMMO_RECT_SIZE_TENS_Y_REGISTER AmmoRectSizeTensY_Register(&pAmmoRectSizeTensY);
-
-#define AMMO_UPPER_SCALE_TENS_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoUpperScaleTensX_Register(u16 (**pointer))); \
-u16 (*pAmmoUpperScaleTensX);
-
-#define AMMO_UPPER_SCALE_TENS_X_REGISTER AmmoUpperScaleTensX_Register(&pAmmoUpperScaleTensX);
-
-#define AMMO_UPPER_SCALE_TENS_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoUpperScaleTensY_Register(u16 (**pointer))); \
-u16 (*pAmmoUpperScaleTensY);
-
-#define AMMO_UPPER_SCALE_TENS_Y_REGISTER AmmoUpperScaleTensY_Register(&pAmmoUpperScaleTensY);
-
-#define AMMO_LOWER_SCALE_TENS_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoLowerScaleTensX_Register(u16 (**pointer))); \
-u16 (*pAmmoLowerScaleTensX);
-
-#define AMMO_LOWER_SCALE_TENS_X_REGISTER AmmoLowerScaleTensX_Register(&pAmmoLowerScaleTensX);
-
-#define AMMO_LOWER_SCALE_TENS_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoLowerScaleTensY_Register(u16 (**pointer))); \
-u16 (*pAmmoLowerScaleTensY);
-
-#define AMMO_LOWER_SCALE_TENS_Y_REGISTER AmmoLowerScaleTensY_Register(&pAmmoLowerScaleTensY);
-
-#define AMMO_TEXTURE_ONES_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoTextureOnes_Register(TexturePtr (**pointer))); \
-TexturePtr (*pAmmoTextureOnes);
-
-#define AMMO_TEXTURE_ONES_REGISTER AmmoTextureOnes_Register(&pAmmoTextureOnes);
-
-#define AMMO_TEXTURE_WIDTH_ONES_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoTextureWidthOnes_Register(s16 (**pointer))); \
-s16 (*pAmmoTextureWidthOnes);
-
-#define AMMO_TEXTURE_WIDTH_ONES_REGISTER AmmoTextureWidthOnes_Register(&pAmmoTextureWidthOnes);
-
-#define AMMO_TEXTURE_HEIGHT_ONES_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoTextureHeightOnes_Register(s16 (**pointer))); \
-s16 (*pAmmoTextureHeightOnes);
-
-#define AMMO_TEXTURE_HEIGHT_ONES_REGISTER AmmoTextureHeightOnes_Register(&pAmmoTextureHeightOnes);
-
-#define AMMO_POSITIONS_ONES_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoPositionsOnesX_Register(s16 (**pointer)[4])); \
-s16 (*pAmmoPositionsOnesX)[4];
-
-#define AMMO_POSITIONS_ONES_X_REGISTER AmmoPositionsOnesX_Register(&pAmmoPositionsOnesX);
-
-#define AMMO_POSITIONS_ONES_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoPositionsOnesY_Register(s16 (**pointer)[4])); \
-s16 (*pAmmoPositionsOnesY)[4];
-
-#define AMMO_POSITIONS_ONES_Y_REGISTER AmmoPositionsOnesY_Register(&pAmmoPositionsOnesY);
-
-#define AMMO_RECT_SIZE_ONES_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoRectSizeOnesX_Register(s16 (**pointer)[4])); \
-s16 (*pAmmoRectSizeOnesX)[4];
-
-#define AMMO_RECT_SIZE_ONES_X_REGISTER AmmoRectSizeOnesX_Register(&pAmmoRectSizeOnesX);
-
-#define AMMO_RECT_SIZE_ONES_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoRectSizeOnesY_Register(s16 (**pointer)[4])); \
-s16 (*pAmmoRectSizeOnesY)[4];
-
-#define AMMO_RECT_SIZE_ONES_Y_REGISTER AmmoRectSizeOnesY_Register(&pAmmoRectSizeOnesY);
-
-#define AMMO_UPPER_SCALE_ONES_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoUpperScaleOnesX_Register(u16 (**pointer))); \
-u16 (*pAmmoUpperScaleOnesX);
-
-#define AMMO_UPPER_SCALE_ONES_X_REGISTER AmmoUpperScaleOnesX_Register(&pAmmoUpperScaleOnesX);
-
-#define AMMO_UPPER_SCALE_ONES_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoUpperScaleOnesY_Register(u16 (**pointer))); \
-u16 (*pAmmoUpperScaleOnesY);
-
-#define AMMO_UPPER_SCALE_ONES_Y_REGISTER AmmoUpperScaleOnesY_Register(&pAmmoUpperScaleOnesY);
-
-#define AMMO_LOWER_SCALE_ONES_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoLowerScaleOnesX_Register(u16 (**pointer))); \
-u16 (*pAmmoLowerScaleOnesX);
-
-#define AMMO_LOWER_SCALE_ONES_X_REGISTER AmmoLowerScaleOnesX_Register(&pAmmoLowerScaleOnesX);
-
-#define AMMO_LOWER_SCALE_ONES_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AmmoLowerScaleOnesY_Register(u16 (**pointer))); \
-u16 (*pAmmoLowerScaleOnesY);
-
-#define AMMO_LOWER_SCALE_ONES_Y_REGISTER AmmoLowerScaleOnesY_Register(&pAmmoLowerScaleOnesY);
 
 #define ITEM_ICON_TEXTURE_OVERRIDE_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void ItemIconTextureOverride_Register(TexturePtr (**pointer))); \
 TexturePtr (*pItemIconTextureOverride);
