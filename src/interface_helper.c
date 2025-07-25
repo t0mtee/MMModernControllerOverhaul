@@ -127,44 +127,46 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
     // Calculate the offset that should be applied to the shoulder Y position based on user's config.
     vShoulderOffset = (recomp_get_config_u32("shoulder_position") - 1) * -3;
     
-    switch (recomp_get_config_u32("attack_button")) {
-        case 0: // Up
-            (*pButtonPositionsX)[0] = 218;                  // Button X
-            (*pButtonPositionsY)[0] = 14;                   // Button Y
-            break;
-        case 1: // Left
-            (*pButtonPositionsX)[0] = 193;                  // Button X
-            (*pButtonPositionsY)[0] = 34;                   // Button Y
-            break;
-        case 2: // Down
-            (*pButtonPositionsX)[0] = 218;                  // Button X
-            (*pButtonPositionsY)[0] = 54;                   // Button Y
-            break;
-        case 3: // Right
-            (*pButtonPositionsX)[0] = 245;                  // Button X
-            (*pButtonPositionsY)[0] = 34;                   // Button Y
-            break;
-        case 4: // Shoulder
-            (*pButtonPositionsX)[0] = 270;                  // Button X
-            (*pButtonPositionsY)[0] = 14 + vShoulderOffset; // Button Y
-            break;
-    }
-    
-    // Set Attack ammo drawing positions to same place relative to button position
-    (*pAmmoPositionsTensX)[0] = (*pButtonPositionsX)[0] + 2;
-    (*pAmmoPositionsTensY)[0] = (*pButtonPositionsY)[0] + 19;
-    
-    // Set Attack button action prompts to same place relative to button position
-    // Japanese
-    sBButtonDoActionXPositions[0] = (*pButtonPositionsX)[0] - 9;
-    sBButtonDoActionYPositions[0] = (*pButtonPositionsY)[0] + 6;
-    // English
-    sBButtonDoActionXPositions[1] = (*pButtonPositionsX)[0] - 12;
-    sBButtonDoActionYPositions[1] = (*pButtonPositionsY)[0] + 5;
-    
+    // Move UI elements as per config
     for (int index = EQUIP_SLOT_B; index <= EQUIP_SLOT_C_RIGHT; index++ ) {
-        // C-button only shenanigans
-        if (index != EQUIP_SLOT_B) {
+        if (index == EQUIP_SLOT_B) {
+            // Attack button only shenanigans
+            switch (recomp_get_config_u32(BUTTON_CONFIGS[index])) {
+                case 0: // Up
+                    (*pButtonPositionsX)[index] = 218;                  // Button X
+                    (*pButtonPositionsY)[index] = 14;                   // Button Y
+                    break;
+                case 1: // Left
+                    (*pButtonPositionsX)[index] = 193;                  // Button X
+                    (*pButtonPositionsY)[index] = 34;                   // Button Y
+                    break;
+                case 2: // Down
+                    (*pButtonPositionsX)[index] = 218;                  // Button X
+                    (*pButtonPositionsY)[index] = 54;                   // Button Y
+                    break;
+                case 3: // Right
+                    (*pButtonPositionsX)[index] = 245;                  // Button X
+                    (*pButtonPositionsY)[index] = 34;                   // Button Y
+                    break;
+                case 4: // Shoulder
+                    (*pButtonPositionsX)[index] = 270;                  // Button X
+                    (*pButtonPositionsY)[index] = 14 + vShoulderOffset; // Button Y
+                    break;
+            }
+            
+            // Set Attack ammo drawing positions to same place relative to button position
+            (*pAmmoPositionsTensX)[index] = (*pButtonPositionsX)[index] + 2;
+            (*pAmmoPositionsTensY)[index] = (*pButtonPositionsY)[index] + 19;
+            
+            // Set Attack button action prompts to same place relative to button position
+            // Japanese
+            sBButtonDoActionXPositions[0] = (*pButtonPositionsX)[0] - 9;
+            sBButtonDoActionYPositions[0] = (*pButtonPositionsY)[0] + 6;
+            // English
+            sBButtonDoActionXPositions[1] = (*pButtonPositionsX)[0] - 12;
+            sBButtonDoActionYPositions[1] = (*pButtonPositionsY)[0] + 5;
+        } else {
+            // C-button only shenanigans
             int cIndex = index - 1;
             
             // Move C-buttons as per config
@@ -206,7 +208,7 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
             sMaskCButtonPosX[cIndex] = sCButtonPosX[cIndex];
             sMaskCButtonPosY[cIndex] = sCButtonPosY[cIndex];
         }
-
+        
         // Set ammo one positions to be next to ammo tens
         (*pAmmoPositionsOnesX)[index] = (*pAmmoPositionsTensX)[index] + 6;
         (*pAmmoPositionsOnesY)[index] = (*pAmmoPositionsTensY)[index];
@@ -215,7 +217,7 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
         (*pItemIconPositionsX)[index] = (*pButtonPositionsX)[index] << 2;
         (*pItemIconPositionsY)[index] = (*pButtonPositionsY)[index] << 2;
     }
-
+    
     // Makes sure the Action button's offset is always zero - it doesn't need to be changed with this mod.
     R_A_BTN_Y_OFFSET = 0;
     
