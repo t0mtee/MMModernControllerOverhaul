@@ -188,7 +188,10 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
                 (*pCGlyphsEnabled)[cIndex] = false;
             } else {
                 (*pCGlyphsEnabled)[cIndex] = true;
-                (*pCGlyphTextures)[cIndex] = Mod_GlyphTexture(index);
+                // Only change glyph texture when glyph is visible, no point in doing it otherwise
+                if (GET_CUR_FORM_BTN_ITEM(index) > 0xF0) {
+                    (*pCGlyphTextures)[cIndex] = Mod_GlyphTexture(index);
+                }
             }
 
             // Set glyph drawing positions to same place as button drawing positions
