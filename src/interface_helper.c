@@ -95,31 +95,6 @@ RECOMP_CALLBACK("*", recomp_after_play_init) void after_play_init() {
     (*pCUpLabelPositionX) = 965;
 }
 
-#define C_UP(button)    (*pButtonPositionsX)[button + 1] = 219;                         /* Button X */   \
-                        (*pButtonPositionsY)[button + 1] = 15;                          /* Button Y */   \
-                        sCButtonPosX[button] = 550;                                     /* Item Equip X */  \
-                        sCButtonPosY[button] = 1150;                                    /* Item Equip Y */  \
-
-#define C_LEFT(button)  (*pButtonPositionsX)[button + 1] = 194;                         /* Button X */   \
-                        (*pButtonPositionsY)[button + 1] = 35;                          /* Button Y */   \
-                        sCButtonPosX[button] = 350;                                     /* Item Equip X */  \
-                        sCButtonPosY[button] = 950;                                     /* Item Equip Y */  \
-
-#define C_DOWN(button)  (*pButtonPositionsX)[button + 1] = 219;                         /* Button X */   \
-                        (*pButtonPositionsY)[button + 1] = 55;                          /* Button Y */   \
-                        sCButtonPosX[button] = 550;                                     /* Item Equip X */  \
-                        sCButtonPosY[button] = 700;                                     /* Item Equip Y */  \
-
-#define C_RIGHT(button) (*pButtonPositionsX)[button + 1] = 246;                         /* Button X */   \
-                        (*pButtonPositionsY)[button + 1] = 35;                          /* Button Y */   \
-                        sCButtonPosX[button] = 815;                                     /* Item Equip X */  \
-                        sCButtonPosY[button] = 950;                                     /* Item Equip Y */  \
-
-#define C_SHOULDER(button)  (*pButtonPositionsX)[button + 1] = 271;                     /* Button X */   \
-                            (*pButtonPositionsY)[button + 1] = 15 + vShoulderOffset;    /* Button Y */   \
-                            sCButtonPosX[button] = 1140;                                /* Item Equip X */  \
-                            sCButtonPosY[button] = 1150 - (vShoulderOffset * 16);       /* Item Equip Y */  \
-
 int vShoulderOffset;
 
 // Set here so that config changes have immediate effect.
@@ -172,19 +147,39 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
             // Move C-buttons as per config
             switch (recomp_get_config_u32(BUTTON_CONFIGS[index])) {
                 case 0: // Up
-                    C_UP(cIndex)
+                    (*pButtonPositionsX)[index] = 219;                      // Button X
+                    (*pButtonPositionsY)[index] = 15;                       // Button Y
+
+                    sCButtonPosX[cIndex] = 550;                             // Item Equip X
+                    sCButtonPosY[cIndex] = 1150;                            // Item Equip Y
                     break;
                 case 1: // Left
-                    C_LEFT(cIndex)
+                    (*pButtonPositionsX)[index] = 194;                      // Button X
+                    (*pButtonPositionsY)[index] = 35;                       // Button Y
+                    
+                    sCButtonPosX[cIndex] = 350;                             // Item Equip X
+                    sCButtonPosY[cIndex] = 950;                             // Item Equip Y
                     break;
                 case 2: // Down
-                    C_DOWN(cIndex)
+                    (*pButtonPositionsX)[index] = 219;                      // Button X
+                    (*pButtonPositionsY)[index] = 55;                       // Button Y
+                    
+                    sCButtonPosX[cIndex] = 550;                             // Item Equip X
+                    sCButtonPosY[cIndex] = 700;                             // Item Equip Y
                     break;
                 case 3: // Right
-                    C_RIGHT(cIndex)
+                    (*pButtonPositionsX)[index] = 246;                      // Button X
+                    (*pButtonPositionsY)[index] = 35;                       // Button Y
+                    
+                    sCButtonPosX[cIndex] = 815;                             // Item Equip X
+                    sCButtonPosY[cIndex] = 950;                             // Item Equip Y
                     break;
                 case 4: // Shoulder
-                    C_SHOULDER(cIndex)
+                    (*pButtonPositionsX)[index] = 271;                      // Button X
+                    (*pButtonPositionsY)[index] = 15 + vShoulderOffset;     // Button Y
+                    
+                    sCButtonPosX[cIndex] = 1140;                            // Item Equip X
+                    sCButtonPosY[cIndex] = 1150 - (vShoulderOffset * 16);   // Item Equip Y
                     break;
             }
             
