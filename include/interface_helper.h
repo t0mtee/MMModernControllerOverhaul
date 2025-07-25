@@ -541,4 +541,4 @@ s16 (*pItemIconTextureScales)[];
 
 #define ITEM_ICON_TEXTURE_SCALES_REGISTER ItemIconTextureScales_Register(&pItemIconTextureScales);
 
-#endif // INTERFACE_HELPER
+#endif // __INTERFACE_HELPER__
