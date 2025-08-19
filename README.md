@@ -1,6 +1,6 @@
 # Majora's Mask: Recompiled Modern Controller Overhaul Mod
 
-__IMPORTANT: All the textures included in this pack are designed for a control scheme with the Action button on the right and the Attack button on the left. If you use a different control scheme, you'll have to use a pre-configured texture pack or modify the texture pack manually. [Read more here](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/TEXTURES.md).__
+__IMPORTANT: All the textures included in this pack are designed for a control scheme with the Action button assigned to right and the Attack button to down. If you use a different control scheme, you'll have to use a pre-configured texture pack or modify the texture pack manually. [Read more here](https://github.com/t0mtee/MMModernControllerOverhaul/blob/main/TEXTURES.md).__
 
 A Zelda64Recomp mod, built with cross-mod compatibility in mind, that aims to overhaul the HUD and UI surrounding the game's control scheme in order to align it as closely as possible with modern controllers.
 
