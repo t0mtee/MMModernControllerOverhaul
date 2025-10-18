@@ -1,7 +1,7 @@
 #ifndef __INTERFACE_HELPER__
 #define __INTERFACE_HELPER__
 
-// Interface Helper header v1.0.0
+// Interface Helper header v1.1.0
 
 #include "modding.h"
 #include "global.h"
@@ -540,5 +540,25 @@ s16 (*pItemIconTextureDimensions)[];
 s16 (*pItemIconTextureScales)[];
 
 #define ITEM_ICON_TEXTURE_SCALES_REGISTER ItemIconTextureScales_Register(&pItemIconTextureScales);
+
+#define B_ITEM_EQUIP_POSITION_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void BItemEquipPositionX_Register(s16 (**pointer))); \
+s16 (*pBItemEquipPositionX);
+
+#define B_ITEM_EQUIP_POSITION_X_REGISTER BItemEquipPositionX_Register(&pBItemEquipPositionX);
+
+#define B_ITEM_EQUIP_POSITION_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void BItemEquipPositionY_Register(s16 (**pointer))); \
+s16 (*pBItemEquipPositionY);
+
+#define B_ITEM_EQUIP_POSITION_Y_REGISTER BItemEquipPositionY_Register(&pBItemEquipPositionY);
+
+#define A_ITEM_EQUIP_POSITION_X_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AItemEquipPositionX_Register(s16 (**pointer))); \
+s16 (*pAItemEquipPositionX);
+
+#define A_ITEM_EQUIP_POSITION_X_REGISTER AItemEquipPositionX_Register(&pAItemEquipPositionX);
+
+#define A_ITEM_EQUIP_POSITION_Y_DECLARE RECOMP_IMPORT("mm_recomp_interface_helper", void AItemEquipPositionY_Register(s16 (**pointer))); \
+s16 (*pAItemEquipPositionY);
+
+#define A_ITEM_EQUIP_POSITION_Y_REGISTER AItemEquipPositionY_Register(&pAItemEquipPositionY);
 
 #endif // __INTERFACE_HELPER__

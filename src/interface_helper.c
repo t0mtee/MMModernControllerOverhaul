@@ -68,6 +68,10 @@ C_UP_LABEL_POSITION_X_DECLARE
 B_BUTTON_DRAWN_DECLARE
 ITEM_ICON_POSITIONS_X_DECLARE
 ITEM_ICON_POSITIONS_Y_DECLARE
+B_ITEM_EQUIP_POSITION_X_DECLARE
+B_ITEM_EQUIP_POSITION_Y_DECLARE
+A_ITEM_EQUIP_POSITION_X_DECLARE
+A_ITEM_EQUIP_POSITION_Y_DECLARE
 
 RECOMP_CALLBACK("*", recomp_after_play_init) void after_play_init() {
     AMMO_POSITIONS_TENS_X_REGISTER
@@ -87,6 +91,10 @@ RECOMP_CALLBACK("*", recomp_after_play_init) void after_play_init() {
     B_BUTTON_DRAWN_REGISTER
     ITEM_ICON_POSITIONS_X_REGISTER
     ITEM_ICON_POSITIONS_Y_REGISTER
+    B_ITEM_EQUIP_POSITION_X_REGISTER
+    B_ITEM_EQUIP_POSITION_Y_REGISTER
+    A_ITEM_EQUIP_POSITION_X_REGISTER
+    A_ITEM_EQUIP_POSITION_Y_REGISTER
     
     (*pStartButtonEnabled) = false;
     (*pStartLabelEnabled) = false;
@@ -108,24 +116,39 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
             // Attack button only shenanigans
             switch (recomp_get_config_u32(BUTTON_CONFIGS[index])) {
                 case 0: // Up
-                    (*pButtonPositionsX)[index] = 218;                  // Button X
-                    (*pButtonPositionsY)[index] = 14;                   // Button Y
+                    (*pButtonPositionsX)[index] = 218;                         // Button X
+                    (*pButtonPositionsY)[index] = 14;                          // Button Y
+                    
+                    (*pBItemEquipPositionX) = 550;                             // Item Equip X
+                    (*pBItemEquipPositionY) = 1150;                            // Item Equip Y
                     break;
                 case 1: // Left
-                    (*pButtonPositionsX)[index] = 193;                  // Button X
-                    (*pButtonPositionsY)[index] = 34;                   // Button Y
+                    (*pButtonPositionsX)[index] = 193;                         // Button X
+                    (*pButtonPositionsY)[index] = 34;                          // Button Y
+                    
+                    (*pBItemEquipPositionX) = 350;                             // Item Equip X
+                    (*pBItemEquipPositionY) = 950;                             // Item Equip Y
                     break;
                 case 2: // Down
-                    (*pButtonPositionsX)[index] = 218;                  // Button X
-                    (*pButtonPositionsY)[index] = 54;                   // Button Y
+                    (*pButtonPositionsX)[index] = 218;                         // Button X
+                    (*pButtonPositionsY)[index] = 54;                          // Button Y
+                    
+                    (*pBItemEquipPositionX) = 550;                             // Item Equip X
+                    (*pBItemEquipPositionY) = 700;                             // Item Equip Y
                     break;
                 case 3: // Right
-                    (*pButtonPositionsX)[index] = 245;                  // Button X
-                    (*pButtonPositionsY)[index] = 34;                   // Button Y
+                    (*pButtonPositionsX)[index] = 245;                         // Button X
+                    (*pButtonPositionsY)[index] = 34;                          // Button Y
+                    
+                    (*pBItemEquipPositionX) = 815;                             // Item Equip X
+                    (*pBItemEquipPositionY) = 950;                             // Item Equip Y
                     break;
                 case 4: // Shoulder
-                    (*pButtonPositionsX)[index] = 270;                  // Button X
-                    (*pButtonPositionsY)[index] = 14 + vShoulderOffset; // Button Y
+                    (*pButtonPositionsX)[index] = 270;                         // Button X
+                    (*pButtonPositionsY)[index] = 14 + vShoulderOffset;        // Button Y
+                    
+                    (*pBItemEquipPositionX) = 1140;                            // Item Equip X
+                    (*pBItemEquipPositionY) = 1150 - (vShoulderOffset * 16);   // Item Equip Y
                     break;
             }
             
@@ -149,7 +172,7 @@ RECOMP_HOOK("Interface_DrawCButtonIcons") void Interface_DrawCButtonIcons_Init(P
                 case 0: // Up
                     (*pButtonPositionsX)[index] = 219;                      // Button X
                     (*pButtonPositionsY)[index] = 15;                       // Button Y
-
+                    
                     sCButtonPosX[cIndex] = 550;                             // Item Equip X
                     sCButtonPosY[cIndex] = 1150;                            // Item Equip Y
                     break;

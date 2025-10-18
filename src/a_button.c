@@ -10,6 +10,8 @@ RECOMP_HOOK("Interface_SetPerspectiveView") void Interface_SetPerspectiveView_In
     bPlayState = play;
 }
 
+extern s16 (*pAItemEquipPositionX);
+extern s16 (*pAItemEquipPositionY);
 extern int vShoulderOffset;
 
 RECOMP_HOOK("View_SetViewport") void View_SetViewport_Init(View* view, Viewport* viewport) {
@@ -23,30 +25,45 @@ RECOMP_HOOK("View_SetViewport") void View_SetViewport_Init(View* view, Viewport*
                 viewport->bottomY -= 17;
                 viewport->leftX += 18;
                 viewport->rightX += 18;
+                    
+                (*pAItemEquipPositionX) = 550;                             // Item Equip X
+                (*pAItemEquipPositionY) = 1150;                            // Item Equip Y
                 break;
             case 1: // Left
                 viewport->topY += 3;
                 viewport->bottomY += 3;
                 viewport->leftX -= 7;
                 viewport->rightX -= 7;
+                    
+                (*pAItemEquipPositionX) = 350;                             // Item Equip X
+                (*pAItemEquipPositionY) = 950;                             // Item Equip Y
                 break;
             case 2: // Down
                 viewport->topY += 23;
                 viewport->bottomY += 23;
                 viewport->leftX += 18;
                 viewport->rightX += 18;
+                    
+                (*pAItemEquipPositionX) = 550;                             // Item Equip X
+                (*pAItemEquipPositionY) = 700;                             // Item Equip Y
                 break;
             case 3: // Right
                 viewport->topY += 3;
                 viewport->bottomY += 3;
                 viewport->leftX += 45;
                 viewport->rightX += 45;
+                    
+                (*pAItemEquipPositionX) = 815;                             // Item Equip X
+                (*pAItemEquipPositionY) = 950;                             // Item Equip Y
                 break;
             case 4: // Shoulder
                 viewport->topY -= 17 - vShoulderOffset;
                 viewport->bottomY -= 17 - vShoulderOffset;
                 viewport->leftX += 70;
                 viewport->rightX += 70;
+                    
+                (*pAItemEquipPositionX) = 1140;                            // Item Equip X
+                (*pAItemEquipPositionY) = 1150 - (vShoulderOffset * 16);   // Item Equip Y
                 break;
         }
     }
