@@ -126,7 +126,7 @@ EZTR_ON_INIT void Mod_MessageReplacement() {
         EZTR_NO_VALUE,
         EZTR_NO_VALUE,
         true,
-        "" EZTR_CC_COLOR_RED "Ocarina of Time" EZTR_CC_NEWLINE "" EZTR_CC_COLOR_DEFAULT "This musical instrument is filled" EZTR_CC_NEWLINE "with memories of Princess Zelda." EZTR_CC_NEWLINE "" EZTR_CC_BOX_BREAK2 "Play it with " EZTR_CC_BTN_A " and the " EZTR_CC_BTN_C " buttons." EZTR_CC_NEWLINE "Press " EZTR_CC_BTN_B " to stop." EZTR_CC_END "",
+        "" EZTR_CC_COLOR_RED "Ocarina of Time" EZTR_CC_NEWLINE "" EZTR_CC_COLOR_DEFAULT "This musical instrument is filled" EZTR_CC_NEWLINE "with memories of Princess Zelda." EZTR_CC_NEWLINE "" EZTR_CC_BOX_BREAK2 "Play it with " EZTR_CC_BTN_A " and the right " EZTR_CC_CONTROL_PAD "." EZTR_CC_NEWLINE "Press " EZTR_CC_BTN_B " to stop." EZTR_CC_END "",
         NULL
     );
     
@@ -139,7 +139,33 @@ EZTR_ON_INIT void Mod_MessageReplacement() {
         EZTR_NO_VALUE,
         EZTR_NO_VALUE,
         true,
-        "" EZTR_CC_QUICKTEXT_ENABLE "You got the " EZTR_CC_COLOR_RED "Ocarina of Time" EZTR_CC_NEWLINE "" EZTR_CC_COLOR_DEFAULT "back!" EZTR_CC_QUICKTEXT_DISABLE "" EZTR_CC_NEWLINE "" EZTR_CC_DELAY "|00|0A" EZTR_CC_COLOR_RED "Princess Zelda" EZTR_CC_COLOR_DEFAULT " gave you this" EZTR_CC_NEWLINE "precious instrument." EZTR_CC_BOX_BREAK "Set it to " EZTR_CC_COLOR_YELLOW "" EZTR_CC_BTN_C "" EZTR_CC_COLOR_DEFAULT " and use " EZTR_CC_COLOR_YELLOW "" EZTR_CC_BTN_A " " EZTR_CC_COLOR_DEFAULT "and the" EZTR_CC_NEWLINE EZTR_CC_COLOR_YELLOW "" EZTR_CC_BTN_C "" EZTR_CC_COLOR_DEFAULT " buttons to play it." EZTR_CC_NEWLINE "Press " EZTR_CC_BTN_B " to stop." EZTR_CC_NEWLINE "" EZTR_CC_BOX_BREAK2 "...Suddenly, memories of " EZTR_CC_COLOR_RED "Princess" EZTR_CC_NEWLINE "Zelda " EZTR_CC_COLOR_DEFAULT "come rushing back to you..." EZTR_CC_END "",
+        "" EZTR_CC_QUICKTEXT_ENABLE "You got the " EZTR_CC_COLOR_RED "Ocarina of Time" EZTR_CC_NEWLINE "" EZTR_CC_COLOR_DEFAULT "back!" EZTR_CC_QUICKTEXT_DISABLE "" EZTR_CC_NEWLINE "" EZTR_CC_DELAY "|00|0A" EZTR_CC_COLOR_RED "Princess Zelda" EZTR_CC_COLOR_DEFAULT " gave you this" EZTR_CC_NEWLINE "precious instrument." EZTR_CC_BOX_BREAK "Set it to " EZTR_CC_COLOR_YELLOW "" EZTR_CC_BTN_C "" EZTR_CC_COLOR_DEFAULT " and use " EZTR_CC_COLOR_YELLOW "" EZTR_CC_BTN_A " " EZTR_CC_COLOR_DEFAULT "and the" EZTR_CC_NEWLINE "right " EZTR_CC_COLOR_YELLOW "" EZTR_CC_CONTROL_PAD "" EZTR_CC_COLOR_DEFAULT " to play it." EZTR_CC_NEWLINE "Press " EZTR_CC_BTN_B " to stop." EZTR_CC_NEWLINE "" EZTR_CC_BOX_BREAK2 "...Suddenly, memories of " EZTR_CC_COLOR_RED "Princess" EZTR_CC_NEWLINE "Zelda " EZTR_CC_COLOR_DEFAULT "come rushing back to you..." EZTR_CC_END "",
+        NULL
+    );
+    
+    EZTR_Basic_ReplaceText(
+        0x1B59,
+        EZTR_OCARINA_STAFF,
+        0,
+        EZTR_ICON_NO_ICON,
+        EZTR_NO_VALUE,
+        EZTR_NO_VALUE,
+        EZTR_NO_VALUE,
+        true,
+        "Play it with |B0 and the right |BB or|11the |04D-pad|00.|BF",
+        NULL
+    );
+
+    EZTR_Basic_ReplaceText(
+        0x1B5A,
+        EZTR_OCARINA_STAFF,
+        0,
+        EZTR_ICON_NO_ICON,
+        EZTR_NO_VALUE,
+        EZTR_NO_VALUE,
+        EZTR_NO_VALUE,
+        true,
+        "Play with |B0 and the right |BB or|11the |04D-pad|00.|BF",
         NULL
     );
 
