@@ -25,7 +25,7 @@ RECOMP_HOOK("View_SetViewport") void View_SetViewport_Init(View* view, Viewport*
                 viewport->bottomY -= 17;
                 viewport->leftX += 18;
                 viewport->rightX += 18;
-                    
+
                 (*pAItemEquipPositionX) = 550;                             // Item Equip X
                 (*pAItemEquipPositionY) = 1150;                            // Item Equip Y
                 break;
@@ -34,7 +34,7 @@ RECOMP_HOOK("View_SetViewport") void View_SetViewport_Init(View* view, Viewport*
                 viewport->bottomY += 3;
                 viewport->leftX -= 7;
                 viewport->rightX -= 7;
-                    
+
                 (*pAItemEquipPositionX) = 350;                             // Item Equip X
                 (*pAItemEquipPositionY) = 950;                             // Item Equip Y
                 break;
@@ -43,7 +43,7 @@ RECOMP_HOOK("View_SetViewport") void View_SetViewport_Init(View* view, Viewport*
                 viewport->bottomY += 23;
                 viewport->leftX += 18;
                 viewport->rightX += 18;
-                    
+
                 (*pAItemEquipPositionX) = 550;                             // Item Equip X
                 (*pAItemEquipPositionY) = 700;                             // Item Equip Y
                 break;
@@ -52,7 +52,7 @@ RECOMP_HOOK("View_SetViewport") void View_SetViewport_Init(View* view, Viewport*
                 viewport->bottomY += 3;
                 viewport->leftX += 45;
                 viewport->rightX += 45;
-                    
+
                 (*pAItemEquipPositionX) = 815;                             // Item Equip X
                 (*pAItemEquipPositionY) = 950;                             // Item Equip Y
                 break;
@@ -61,7 +61,7 @@ RECOMP_HOOK("View_SetViewport") void View_SetViewport_Init(View* view, Viewport*
                 viewport->bottomY -= 17 - vShoulderOffset;
                 viewport->leftX += 70;
                 viewport->rightX += 70;
-                    
+
                 (*pAItemEquipPositionX) = 1140;                            // Item Equip X
                 (*pAItemEquipPositionY) = 1150 - (vShoulderOffset * 16);   // Item Equip Y
                 break;
@@ -74,18 +74,26 @@ extern f32 sAButtonDoActionTexScales[2];
 // Draw Action button glyph.
 extern TexturePtr Mod_GlyphTexture(EquipSlot button);
 
+bool isAButton = false;
+
+RECOMP_HOOK("Interface_DrawAButton") void Interface_DrawAButton_Init(PlayState* play) {
+    isAButton = true;
+}
+
 RECOMP_HOOK("Matrix_Translate") void Matrix_Translate_Init(f32 x, f32 y, f32 z, MatrixMode mode) {
     InterfaceContext* interfaceCtx = &bPlayState->interfaceCtx;
 
     if (z == sAButtonDoActionTexScales[gSaveContext.options.language] / 10.0f
         && interfaceCtx->aButtonDoAction == DO_ACTION_NONE && recomp_get_config_u32("glyphs") == 2) {
             OPEN_DISPS(bPlayState->state.gfxCtx);
-            
+
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 100, 200, 255, interfaceCtx->aAlpha);
             OVERLAY_DISP = Gfx_DrawTexQuadIA8(OVERLAY_DISP, Mod_GlyphTexture(EQUIP_SLOT_A), 32, 32, 0);
-        
+
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->aAlpha);
-            
+
             CLOSE_DISPS(bPlayState->state.gfxCtx);
+
+            isAButton = false;
     }
 }
