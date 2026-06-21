@@ -74,16 +74,20 @@ extern f32 sAButtonDoActionTexScales[2];
 // Draw Action button glyph.
 extern TexturePtr Mod_GlyphTexture(EquipSlot button);
 
-bool isAButton = false;
+u8 inAButton = 0;
 
 RECOMP_HOOK("Interface_DrawAButton") void Interface_DrawAButton_Init(PlayState* play) {
-    isAButton = true;
+    inAButton = 1;
 }
 
 RECOMP_HOOK("Matrix_Translate") void Matrix_Translate_Init(f32 x, f32 y, f32 z, MatrixMode mode) {
     InterfaceContext* interfaceCtx = &bPlayState->interfaceCtx;
 
-    if (isAButton && z == sAButtonDoActionTexScales[gSaveContext.options.language] / 10.0f) {
+    if (inAButton) {
+        inAButton++;
+    }
+
+    if (inAButton == 3) {
         if (interfaceCtx->aButtonDoAction == DO_ACTION_NONE && recomp_get_config_u32("glyphs") == 2) {
             OPEN_DISPS(bPlayState->state.gfxCtx);
 
@@ -94,6 +98,6 @@ RECOMP_HOOK("Matrix_Translate") void Matrix_Translate_Init(f32 x, f32 y, f32 z, 
 
             CLOSE_DISPS(bPlayState->state.gfxCtx);
         }
-        isAButton = false;
+        inAButton = 0;
     }
 }
