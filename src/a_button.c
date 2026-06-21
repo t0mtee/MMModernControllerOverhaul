@@ -83,8 +83,8 @@ RECOMP_HOOK("Interface_DrawAButton") void Interface_DrawAButton_Init(PlayState* 
 RECOMP_HOOK("Matrix_Translate") void Matrix_Translate_Init(f32 x, f32 y, f32 z, MatrixMode mode) {
     InterfaceContext* interfaceCtx = &bPlayState->interfaceCtx;
 
-    if (z == sAButtonDoActionTexScales[gSaveContext.options.language] / 10.0f
-        && interfaceCtx->aButtonDoAction == DO_ACTION_NONE && recomp_get_config_u32("glyphs") == 2) {
+    if (isAButton && z == sAButtonDoActionTexScales[gSaveContext.options.language] / 10.0f) {
+        if (interfaceCtx->aButtonDoAction == DO_ACTION_NONE && recomp_get_config_u32("glyphs") == 2) {
             OPEN_DISPS(bPlayState->state.gfxCtx);
 
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 100, 200, 255, interfaceCtx->aAlpha);
@@ -93,7 +93,7 @@ RECOMP_HOOK("Matrix_Translate") void Matrix_Translate_Init(f32 x, f32 y, f32 z, 
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->aAlpha);
 
             CLOSE_DISPS(bPlayState->state.gfxCtx);
-
-            isAButton = false;
+        }
+        isAButton = false;
     }
 }
