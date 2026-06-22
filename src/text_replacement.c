@@ -126,10 +126,10 @@ EZTR_ON_INIT void Mod_MessageReplacement() {
         EZTR_NO_VALUE,
         EZTR_NO_VALUE,
         true,
-        "" EZTR_CC_COLOR_RED "Ocarina of Time" EZTR_CC_NEWLINE "" EZTR_CC_COLOR_DEFAULT "This musical instrument is filled" EZTR_CC_NEWLINE "with memories of Princess Zelda." EZTR_CC_NEWLINE "" EZTR_CC_BOX_BREAK2 "Play it with " EZTR_CC_BTN_A " and the right " EZTR_CC_CONTROL_PAD "." EZTR_CC_NEWLINE "Press " EZTR_CC_BTN_B " to stop." EZTR_CC_END "",
+        "" EZTR_CC_COLOR_RED "Ocarina of Time" EZTR_CC_NEWLINE "" EZTR_CC_COLOR_DEFAULT "This musical instrument is filled" EZTR_CC_NEWLINE "with memories of Princess Zelda." EZTR_CC_NEWLINE "" EZTR_CC_BOX_BREAK2 "Play it with " EZTR_CC_BTN_A " and the right " EZTR_CC_CONTROL_PAD EZTR_CC_NEWLINE "or the" EZTR_CC_COLOR_YELLOW " D-pad" EZTR_CC_COLOR_DEFAULT "." EZTR_CC_NEWLINE "Press " EZTR_CC_BTN_B " to stop." EZTR_CC_END "",
         NULL
     );
-    
+
     EZTR_Basic_ReplaceText(
         0x004C,
         EZTR_TRANSLUSCENT_BLUE_TEXT_BOX,
@@ -139,10 +139,10 @@ EZTR_ON_INIT void Mod_MessageReplacement() {
         EZTR_NO_VALUE,
         EZTR_NO_VALUE,
         true,
-        "" EZTR_CC_QUICKTEXT_ENABLE "You got the " EZTR_CC_COLOR_RED "Ocarina of Time" EZTR_CC_NEWLINE "" EZTR_CC_COLOR_DEFAULT "back!" EZTR_CC_QUICKTEXT_DISABLE "" EZTR_CC_NEWLINE "" EZTR_CC_DELAY "|00|0A" EZTR_CC_COLOR_RED "Princess Zelda" EZTR_CC_COLOR_DEFAULT " gave you this" EZTR_CC_NEWLINE "precious instrument." EZTR_CC_BOX_BREAK "Set it to " EZTR_CC_COLOR_YELLOW "" EZTR_CC_BTN_C "" EZTR_CC_COLOR_DEFAULT " and use " EZTR_CC_COLOR_YELLOW "" EZTR_CC_BTN_A " " EZTR_CC_COLOR_DEFAULT "and the" EZTR_CC_NEWLINE "right " EZTR_CC_COLOR_YELLOW "" EZTR_CC_CONTROL_PAD "" EZTR_CC_COLOR_DEFAULT " to play it." EZTR_CC_NEWLINE "Press " EZTR_CC_BTN_B " to stop." EZTR_CC_NEWLINE "" EZTR_CC_BOX_BREAK2 "...Suddenly, memories of " EZTR_CC_COLOR_RED "Princess" EZTR_CC_NEWLINE "Zelda " EZTR_CC_COLOR_DEFAULT "come rushing back to you..." EZTR_CC_END "",
+        "" EZTR_CC_QUICKTEXT_ENABLE "You got the " EZTR_CC_COLOR_RED "Ocarina of Time" EZTR_CC_NEWLINE "" EZTR_CC_COLOR_DEFAULT "back!" EZTR_CC_QUICKTEXT_DISABLE "" EZTR_CC_NEWLINE "" EZTR_CC_DELAY "|00|0A" EZTR_CC_COLOR_RED "Princess Zelda" EZTR_CC_COLOR_DEFAULT " gave you this" EZTR_CC_NEWLINE "precious instrument." EZTR_CC_BOX_BREAK "Set it to " EZTR_CC_COLOR_YELLOW "" EZTR_CC_BTN_C "" EZTR_CC_COLOR_DEFAULT " and use " EZTR_CC_COLOR_YELLOW "" EZTR_CC_BTN_A " " EZTR_CC_COLOR_DEFAULT "and the" EZTR_CC_NEWLINE "right " EZTR_CC_CONTROL_PAD " or the" EZTR_CC_COLOR_YELLOW " D-pad" EZTR_CC_COLOR_DEFAULT " to play it." EZTR_CC_NEWLINE "Press " EZTR_CC_BTN_B " to stop." EZTR_CC_NEWLINE "" EZTR_CC_BOX_BREAK2 "...Suddenly, memories of " EZTR_CC_COLOR_RED "Princess" EZTR_CC_NEWLINE "Zelda " EZTR_CC_COLOR_DEFAULT "come rushing back to you..." EZTR_CC_END "",
         NULL
     );
-    
+
     EZTR_Basic_ReplaceText(
         0x1B59,
         EZTR_OCARINA_STAFF,
@@ -194,7 +194,7 @@ EZTR_ON_INIT void Mod_MessageReplacement() {
         "|04Hero's Shield|11|00Use with |B4. Press |B4 while |01ZL|11Targeting|00 to defend while moving.|BF",
         c1788
     );
-    
+
     EZTR_Basic_ReplaceText(
         0x1912,
         EZTR_BLUE_TEXT_BOX,
@@ -207,7 +207,7 @@ EZTR_ON_INIT void Mod_MessageReplacement() {
         "|05What?! Don't you know about|11the |00Keese|05? Use ZL Targeting when|11it gets close. Even if it flies off,|11I'll follow it for you.|00|BF",
         c1912
     );
-    
+
     EZTR_Basic_ReplaceText(
         0x191D,
         EZTR_BLUE_TEXT_BOX,
@@ -220,7 +220,7 @@ EZTR_ON_INIT void Mod_MessageReplacement() {
         "|05Use ZL Targeting methods while|11defending...The \"Unthinkable?\"|11What could that possibly be|11in a place as dark as this?|00|BF",
         c191D
     );
-    
+
     EZTR_Basic_ReplaceText(
         0x1944,
         EZTR_BLUE_TEXT_BOX,
@@ -233,7 +233,7 @@ EZTR_ON_INIT void Mod_MessageReplacement() {
         "|05What?! You don't know about the|11|00Poe|05? If you try to use ZL|11Targeting, it vanishes.|00|BF",
         c1944
     );
-    
+
     EZTR_Basic_ReplaceText(
         0x1946,
         EZTR_BLUE_TEXT_BOX,
@@ -259,7 +259,7 @@ EZTR_ON_INIT void Mod_MessageReplacement() {
         "|05The |00pirate|05 found you!|11Use ZL targeting and look for your|11chance. You're caught if you don't|11win.|00|BF",
         c1954
     );
-    
+
     EZTR_Basic_ReplaceText(
         0x271A,
         EZTR_STANDARD_TEXT_BOX_I,
