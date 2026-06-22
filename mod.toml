@@ -8,7 +8,7 @@
 id = "mm_modern_controller_overhaul"
 
 # Version of this mod.
-version = "4.0.2"
+version = "4.0.3"
 
 # The name that will show up for this mod in the mod menu. This should be human readable.
 display_name = "Modern Controller Overhaul"
@@ -138,7 +138,7 @@ id = "shoulder_position"
 name = "Shoulder Button Position"
 description = """
 Would you like the shoulder button to aligned with the up button or slightly lower / higher?
-""" 
+"""
 type = "Enum"
 options = [ "Lower", "Aligned", "Higher" ]
 default = "Lower"
