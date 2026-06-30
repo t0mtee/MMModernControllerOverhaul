@@ -1,7 +1,7 @@
 // Project tasks configuration. See https://zed.dev/docs/tasks for documentation.
 [
   {
-    "label": "Build",
+    "label": "build",
     "command": "rm -r ./build; make && ../RecompModTool mod.toml ./build",
     //"args": [],
     // Env overrides for the command, will be appended to the terminal's environment from the settings.
